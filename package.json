@@ -3,7 +3,7 @@
   "displayName": "Snap test",
   "version": "0.0.1",
   "description": "A test extension",
-  "author": "Santiago Garcia ",
+  "author": "Santiago Garcia",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",

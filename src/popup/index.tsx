@@ -1,67 +1,49 @@
 import "~/global.css"
 
 import { useData } from "~/hooks/use-data"
-import { usePopupRoute } from "~/hooks/use-popup-route"
+import { useRoute } from "~/hooks/use-route"
 import { useSessions } from "~/hooks/use-sessions"
 
 import SelectSessionPopup from "./select-session-popup"
 import SessionPopup from "./session-popup"
 
 export default function MainPopup() {
-  const { route, navigate } = usePopupRoute()
+  const { route, navigate } = useRoute()
 
-  const {
-    sessions,
-    setSessions,
-    createSession,
-    deleteSession,
-    clearAllSessions
-  } = useSessions()
+  const { sessions, createSession, deleteSession, clearAllSessions } =
+    useSessions()
 
-  const {
-    data,
-    setData,
-    createData,
-    deleteData,
-    clearAllData,
-    getSessionData
-  } = useData()
+  const { createData, deleteData, clearAllData, getSessionData } = useData()
 
   async function exportData() {
-    const json = JSON.stringify({ sessions, data })
-    const blob = new Blob([json], { type: "application/json" })
-    const url = URL.createObjectURL(blob)
-
-    await chrome.downloads.download({
-      url,
-      filename: `snap-test.json`,
-      saveAs: true
-    })
-
-    URL.revokeObjectURL(url)
+    // const json = JSON.stringify({ sessions, data })
+    // const blob = new Blob([json], { type: "application/json" })
+    // const url = URL.createObjectURL(blob)
+    // await chrome.downloads.download({
+    //   url,
+    //   filename: `snap-test.json`,
+    //   saveAs: true
+    // })
+    // URL.revokeObjectURL(url)
   }
 
   async function importData(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files[0]
-
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      try {
-        const file = (e.target as FileReader).result
-        if (typeof file !== "string") return
-
-        const { sessions, data } = JSON.parse(file)
-        if (!Array.isArray(sessions) || !Array.isArray(data)) return
-
-        setSessions(sessions)
-        setData(data)
-      } catch (error) {
-        alert("Invalid JSON")
-      }
-    }
-
-    reader.readAsText(file)
-    event.target.value = ""
+    // const file = event.target.files[0]
+    // const reader = new FileReader()
+    // reader.onload = async (e) => {
+    //   try {
+    //     const file = (e.target as FileReader).result
+    //     if (typeof file !== "string") return
+    //     const { sessions, data } = JSON.parse(file)
+    //     if (!Array.isArray(sessions) || !Array.isArray(data)) return
+    //     setSessions(sessions)
+    //     setData(data)
+    //   } catch (error) {
+    //     alert("Invalid JSON")
+    //   }
+    // }
+    // reader.readAsText(file)
+    // event.target.value = ""
   }
 
   return (
@@ -87,7 +69,7 @@ export default function MainPopup() {
           getSessionData={getSessionData}
         />
       ) : (
-        <div>404 Page Not Found</div>
+        <div>404 Not Found</div>
       )}
     </div>
   )

@@ -1,6 +1,6 @@
 import { sendToContentScript, type PlasmoMessaging } from "@plasmohq/messaging"
 
-const handler: PlasmoMessaging.MessageHandler = async (_req, res) => {
+const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const [tab] = await chrome.tabs.query({
     active: true,
     currentWindow: true

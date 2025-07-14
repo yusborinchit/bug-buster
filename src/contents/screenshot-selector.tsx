@@ -22,7 +22,7 @@ export default function ScreenshotSelector() {
   const [startPoint, setStartPoint] = useState<Coords | null>(null)
   const [currentRect, setCurrentRect] = useState<Rect | null>(null)
 
-  useMessage(async (req, res) => {
+  useMessage<{ id: string }, unknown>(async (req, res) => {
     if (req.name === "start-screenshot-selection") {
       setIsActive(true)
 
@@ -64,31 +64,28 @@ export default function ScreenshotSelector() {
     [isActive, startPoint]
   )
 
-  const handleMouseUp = useCallback(
-    async (event: MouseEvent) => {
-      if (!isActive || !startPoint || !currentRect) return
+  const handleMouseUp = useCallback(async () => {
+    if (!isActive || !startPoint || !currentRect) return
 
-      setIsActive(false)
+    setIsActive(false)
 
-      setStartPoint(null)
-      setCurrentRect(null)
+    setStartPoint(null)
+    setCurrentRect(null)
 
-      document.body.style.overflow = "auto"
-      document.documentElement.style.cursor = "auto"
+    document.body.style.overflow = "auto"
+    document.documentElement.style.cursor = "auto"
 
-      const finalRect = {
-        x: currentRect.x,
-        y: currentRect.y,
-        width: currentRect.width,
-        height: currentRect.height
-      }
+    const finalRect = {
+      x: currentRect.x,
+      y: currentRect.y,
+      width: currentRect.width,
+      height: currentRect.height
+    }
 
-      if (finalRect.width < 5 || finalRect.height < 5) return
+    if (finalRect.width < 5 || finalRect.height < 5) return
 
-      setPendingCapture(finalRect)
-    },
-    [isActive, startPoint, currentRect]
-  )
+    setPendingCapture(finalRect)
+  }, [isActive, startPoint, currentRect])
 
   useEffect(() => {
     if (isActive) {
@@ -110,11 +107,13 @@ export default function ScreenshotSelector() {
   useEffect(() => {
     if (!isActive && pendingCapture) {
       requestAnimationFrame(() => {
-        sendToBackground({
-          name: "make-screenshot-selection",
-          body: pendingCapture
+        requestAnimationFrame(() => {
+          sendToBackground({
+            name: "make-screenshot-selection",
+            body: pendingCapture
+          })
+          setPendingCapture(null)
         })
-        setPendingCapture(null)
       })
     }
   }, [isActive, pendingCapture])

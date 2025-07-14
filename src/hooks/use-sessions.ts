@@ -1,5 +1,7 @@
+import { useEffect, useRef, useState } from "react"
+
+import { promiseDb, type DB } from "~/utils/database"
 import { getCurrentUrl } from "~/utils/get-current-url"
-import { useStorage } from "./use-storage"
 
 export interface Session {
   id: string
@@ -10,12 +12,25 @@ export interface Session {
 }
 
 export function useSessions() {
-  const [sessions, setSessions] = useStorage<Session[]>("sessions", [])
+  const dbRef = useRef<DB | null>(null)
+
+  const [sessions, setSessions] = useState<Session[]>([])
+
+  useEffect(() => {
+    promiseDb.then((db) => {
+      dbRef.current = db
+      db.getAll("sessions").then((sessions) => {
+        setSessions(sessions)
+      })
+    })
+  }, [])
 
   async function createSession(name: string) {
+    if (!dbRef.current) return
+
     const url = await getCurrentUrl()
 
-    const newSession = {
+    const newSession: Session = {
       id: crypto.randomUUID(),
       site: url.hostname,
       href: url.href,
@@ -23,16 +38,27 @@ export function useSessions() {
       createdAt: new Date().toISOString()
     }
 
-    setSessions([...sessions, newSession])
+    await dbRef.current.add("sessions", newSession)
+    setSessions((prev) => [...prev, newSession])
   }
 
-  function deleteSession(id: string) {
-    setSessions(sessions.filter((s) => s.id !== id))
+  async function deleteSession(id: string) {
+    if (!dbRef.current) return
+    await dbRef.current.delete("sessions", id)
+    setSessions((prev) => prev.filter((s) => s.id !== id))
   }
 
-  function clearAllSessions() {
+  async function clearAllSessions() {
+    if (!dbRef.current) return
+    await dbRef.current.clear("sessions")
     setSessions([])
   }
 
-  return { sessions, setSessions, createSession, deleteSession, clearAllSessions }
+  return {
+    sessions,
+    setSessions,
+    createSession,
+    deleteSession,
+    clearAllSessions
+  }
 }

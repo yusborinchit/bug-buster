@@ -25,9 +25,6 @@ export async function cropScreenshot(
   const blob = await response.blob()
   const imageBitmap = await createImageBitmap(blob)
 
-  console.log("Image size:", imageBitmap.width, imageBitmap.height)
-  console.log("Cropping at:", x, y, width, height)
-
   const offscreen = new OffscreenCanvas(width, height)
   const ctx = offscreen.getContext("2d")
 

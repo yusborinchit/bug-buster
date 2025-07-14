@@ -1,6 +1,6 @@
 {
-  "name": "snap-test",
-  "displayName": "Snap test",
+  "name": "bug-buster",
+  "displayName": "BugBuster",
   "version": "0.0.1",
   "description": "A test extension",
   "author": "Santiago Garcia",

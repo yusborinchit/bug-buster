@@ -3,8 +3,9 @@ import { useId, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import ScreenshotSelectorModal from "~/components/modals/screenshot-selector-modal"
 import type { Data } from "~/hooks/use-data"
-import ScreenshotSelectorModal from "~/popup/screenshot-selector-modal"
+import type { Screenshot } from "~/hooks/use-screenshots"
 import { removeNotificationBadge } from "~/utils/notification-badge"
 
 const NO_RELATED_ID = "no related"
@@ -27,6 +28,7 @@ export default function CreateDataForm({
   const id = useId()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [screenshots, setScreenshots] = useState<Screenshot[]>([])
 
   function handleCreateData(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -40,33 +42,46 @@ export default function CreateDataForm({
     const relatedId = formData.get("related-id")
     if (!relatedId || typeof relatedId !== "string") return
 
-    const data = {
+    const data: Data = {
       id: crypto.randomUUID(),
       related: relatedId === NO_RELATED_ID ? undefined : relatedId,
       sessionId,
       type,
       message,
+      screenshotsIds: screenshots.map((s) => s.id),
       createdAt: new Date().toISOString()
     }
 
     createData(data)
+
+    setScreenshots([])
     form.reset()
   }
 
-  async function handleAttachScreenshot() {
+  function handleAttachScreenshot() {
     removeNotificationBadge()
     setIsModalOpen(true)
   }
 
-  async function handleSubmitScreenshot() {
+  function handleSubmitScreenshot() {
     sendToBackground({
       name: "start-screenshot-selection"
     })
   }
 
+  function handleSelectScreenshots(selectedScreenshots: Screenshot[]) {
+    setScreenshots(selectedScreenshots)
+  }
+
   return (
     <>
-      {isModalOpen && <ScreenshotSelectorModal />}
+      {isModalOpen && (
+        <ScreenshotSelectorModal
+          closeModal={() => setIsModalOpen(false)}
+          attachedScreenshots={screenshots}
+          handleSelectScreenshots={handleSelectScreenshots}
+        />
+      )}
       <form onSubmit={handleCreateData} className="flex flex-col gap-2">
         <div className="flex-col flex border border-neutral-300 rounded-sm bg-neutral-100">
           <label htmlFor={id} className="sr-only">
@@ -77,8 +92,13 @@ export default function CreateDataForm({
             rows={3}
             name="message"
             placeholder={`Add ${label} here...`}
-            className="flex-1 text-xs placeholder:text-neutral-500 bg-neutral-100 resize-none px-4 py-2.5"></textarea>
-          <div className="p-2.5 flex gap-2 text-neutral-500">
+            className="flex-1 text-xs placeholder:text-neutral-500 bg-neutral-100 resize-none p-2.5"></textarea>
+          <div className="p-2.5 flex gap-2 text-neutral-500 items-center">
+            {screenshots.length > 0 && (
+              <p className="text-xs font-bold font-mono">
+                {screenshots.length} Screenshots Attached
+              </p>
+            )}
             <button
               type="button"
               onClick={handleAttachScreenshot}

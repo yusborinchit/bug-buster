@@ -7,12 +7,11 @@ import type { Session } from "~/hooks/use-sessions"
 interface Props {
   createSession: (name: string) => void
   deleteSession: (id: string) => void
-  clearAllSessions: () => void
-  clearAllData: () => void
   sessions: Session[]
   navigate: (path: string) => void
-  exportData: () => Promise<void>
-  importData: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>
+  handleClearAll: () => Promise<void>
+  handleExport: () => Promise<void>
+  handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>
 }
 
 export default function SelectSessionPopup({
@@ -20,10 +19,9 @@ export default function SelectSessionPopup({
   navigate,
   createSession,
   deleteSession,
-  clearAllSessions,
-  clearAllData,
-  exportData,
-  importData
+  handleClearAll,
+  handleExport: exportData,
+  handleImport: importData
 }: Readonly<Props>) {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -36,10 +34,7 @@ export default function SelectSessionPopup({
         </h2>
         <button
           type="button"
-          onClick={() => {
-            clearAllSessions()
-            clearAllData()
-          }}
+          onClick={handleClearAll}
           className="hover:underline">
           Clear All
         </button>
@@ -49,7 +44,7 @@ export default function SelectSessionPopup({
           sessions.map((session) => (
             <li
               key={session.id}
-              className="px-4 py-2.5 rounded-sm border-neutral-300 bg-neutral-100 border text-neutral-500 flex gap-2">
+              className="p-2.5 rounded-sm border-neutral-300 bg-neutral-100 border text-neutral-500 flex gap-2">
               <div className="flex flex-col">
                 <p className="text-black">{session.name}</p>
                 <a

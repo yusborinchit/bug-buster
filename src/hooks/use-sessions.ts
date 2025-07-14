@@ -48,17 +48,10 @@ export function useSessions() {
     setSessions((prev) => prev.filter((s) => s.id !== id))
   }
 
-  async function clearAllSessions() {
-    if (!dbRef.current) return
-    await dbRef.current.clear("sessions")
-    setSessions([])
-  }
-
   return {
     sessions,
     setSessions,
     createSession,
-    deleteSession,
-    clearAllSessions
+    deleteSession
   }
 }

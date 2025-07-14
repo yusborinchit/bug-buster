@@ -5,7 +5,7 @@ import { promiseDb, type DB } from "~/utils/database"
 export interface Data {
   id: string
   sessionId: string
-  screenshotId?: string
+  screenshotsIds?: string[]
   type: "bug" | "note" | "question" | "idea"
   related?: string
   message: string
@@ -42,18 +42,11 @@ export function useData() {
     return data.filter((d) => d.sessionId === sessionId)
   }
 
-  async function clearAllData() {
-    if (!dbRef.current) return
-    await dbRef.current.clear("data")
-    setData([])
-  }
-
   return {
     data,
     setData,
     createData,
     deleteData,
-    clearAllData,
     getSessionData
   }
 }

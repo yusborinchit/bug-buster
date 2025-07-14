@@ -27,7 +27,7 @@ export default function CreateSessionForm({ createSession }: Readonly<Props>) {
         type="text"
         placeholder="Session name here..."
         autoComplete="off"
-        className="flex-1 placeholder:text-neutral-500 border border-neutral-300 rounded-sm px-4 py-2.5"
+        className="flex-1 placeholder:text-neutral-500 border border-neutral-300 rounded-sm p-2.5"
       />
       <button
         type="submit"

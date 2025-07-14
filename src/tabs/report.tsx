@@ -31,8 +31,8 @@ export default function ReportTab() {
   const duration = getCurrentDuration(session.createdAt)
 
   return (
-    <div className="max-w-3xl mx-auto p-6 text-base font-geist flex flex-col gap-4">
-      <header className="flex flex-col">
+    <div className="max-w-2xl mx-auto p-6 text-base font-geist flex flex-col gap-4">
+      <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight text-center mx-auto flex items-center gap-2">
           <span className="text-neutral-500">#</span>
           <span className="flex gap-2">
@@ -48,7 +48,7 @@ export default function ReportTab() {
       </header>
       <main className="flex flex-col">
         {data.length > 0 && (
-          <div className="max-h-[250px] mx-auto mt-4">
+          <div className="max-h-[250px] mx-auto mt-2">
             <DataPieChart data={data} />
           </div>
         )}

@@ -1,19 +1,19 @@
 interface Props {
-  createSession: (name: string) => void
+  createSession: (name: string) => void;
 }
 
 export default function CreateSessionForm({ createSession }: Readonly<Props>) {
   async function handleCreateSession(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    const name = formData.get("session-name")
-    if (!name || typeof name !== "string") return
+    const name = formData.get("session-name");
+    if (!name || typeof name !== "string") return;
 
-    createSession(name)
-    form.reset()
+    createSession(name);
+    form.reset();
   }
 
   return (
@@ -27,13 +27,13 @@ export default function CreateSessionForm({ createSession }: Readonly<Props>) {
         type="text"
         placeholder="Session name here..."
         autoComplete="off"
-        className="flex-1 placeholder:text-neutral-500 border border-neutral-300 rounded-sm p-2.5"
+        className="flex-1 rounded-sm border border-neutral-300 p-2.5 placeholder:text-neutral-500"
       />
       <button
         type="submit"
-        className="px-4 place-items-center py-2.5 grid font-medium rounded-sm shadow bg-gradient-to-t from-red-700 to-red-500 text-white">
+        className="grid place-items-center rounded-sm bg-gradient-to-t from-red-700 to-red-500 px-4 py-2.5 font-medium text-white shadow">
         Add
       </button>
     </form>
-  )
+  );
 }

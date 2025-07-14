@@ -1,20 +1,18 @@
-import { Minus, Plus } from "lucide-react"
-
-import type { Data } from "~/hooks/use-data"
-
-import CreateDataForm from "./create-data-form"
-import DeleteDataForm from "./delete-data-form"
+import { Minus, Plus } from "lucide-react";
+import type { Data } from "~/hooks/use-data";
+import CreateDataForm from "./create-data-form";
+import DeleteDataForm from "./delete-data-form";
 
 interface Props {
-  data: Data[]
-  label: string
-  isSelected: boolean
-  onSelect: () => void
-  sessionId: string
-  type: Data["type"]
-  createData: (data: Data) => void
-  deleteData: (id: string) => void
-  className?: string
+  data: Data[];
+  label: string;
+  isSelected: boolean;
+  onSelect: () => void;
+  sessionId: string;
+  type: Data["type"];
+  createData: (data: Data) => void;
+  deleteData: (id: string) => void;
+  className?: string;
 }
 
 export default function DataForm({
@@ -31,7 +29,7 @@ export default function DataForm({
   return (
     <section className="flex flex-col gap-2">
       <header
-        className={`bg-gradient-to-t shadow flex items-center justify-between rounded-sm py-1.5 px-3.5 text-white ${className}`}>
+        className={`flex items-center justify-between rounded-sm bg-gradient-to-t px-3.5 py-1.5 text-white shadow ${className}`}>
         <h3 className="flex items-center gap-1 text-base font-semibold">
           {data.length} {label}:
         </h3>
@@ -48,8 +46,8 @@ export default function DataForm({
       {isSelected && (
         <>
           <DeleteDataForm data={data} label={label} deleteData={deleteData} />
-          <div className="w-full my-1 relative border-b-1 h-px border border-neutral-300 border-dashed">
-            <p className="absolute text-[10px] bg-white top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 py-0.5 px-1 text-neutral-500">
+          <div className="border-b-1 relative my-1 h-px w-full border border-dashed border-neutral-300">
+            <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-1 py-0.5 text-[10px] text-neutral-500">
               Or
             </p>
           </div>
@@ -63,5 +61,5 @@ export default function DataForm({
         </>
       )}
     </section>
-  )
+  );
 }

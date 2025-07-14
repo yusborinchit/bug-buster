@@ -1,17 +1,16 @@
-import { ArrowDownToLine, ArrowUpToLine, LogIn, Trash2 } from "lucide-react"
-import { useRef } from "react"
-
-import CreateSessionForm from "~/components/create-session-form"
-import type { Session } from "~/hooks/use-sessions"
+import { ArrowDownToLine, ArrowUpToLine, LogIn, Trash2 } from "lucide-react";
+import { useRef } from "react";
+import CreateSessionForm from "~/components/create-session-form";
+import type { Session } from "~/hooks/use-sessions";
 
 interface Props {
-  createSession: (name: string) => void
-  deleteSession: (id: string) => void
-  sessions: Session[]
-  navigate: (path: string) => void
-  handleClearAll: () => Promise<void>
-  handleExport: () => Promise<void>
-  handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>
+  createSession: (name: string) => void;
+  deleteSession: (id: string) => void;
+  sessions: Session[];
+  navigate: (path: string) => void;
+  handleClearAll: () => Promise<void>;
+  handleExport: () => Promise<void>;
+  handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
 export default function SelectSessionPopup({
@@ -23,13 +22,13 @@ export default function SelectSessionPopup({
   handleExport: exportData,
   handleImport: importData
 }: Readonly<Props>) {
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex justify-between items-center">
-        <h2 className="font-bold text-xl tracking-tight leading-[1] flex gap-1">
-          <span className="text-neutral-500 font-medium">#</span>
+      <header className="flex items-center justify-between">
+        <h2 className="flex gap-1 text-xl font-bold leading-[1] tracking-tight">
+          <span className="font-medium text-neutral-500">#</span>
           <span>Current Sessions:</span>
         </h2>
         <button
@@ -44,13 +43,13 @@ export default function SelectSessionPopup({
           sessions.map((session) => (
             <li
               key={session.id}
-              className="p-2.5 rounded-sm border-neutral-300 bg-neutral-100 border text-neutral-500 flex gap-2">
+              className="flex gap-2 rounded-sm border border-neutral-300 bg-neutral-100 p-2.5 text-neutral-500">
               <div className="flex flex-col">
                 <p className="text-black">{session.name}</p>
                 <a
                   href={session.href}
                   target="_blank"
-                  className="text-xs line-clamp-1">
+                  className="line-clamp-1 text-xs">
                   {session.site} &rarr;
                 </a>
               </div>
@@ -68,7 +67,7 @@ export default function SelectSessionPopup({
             </li>
           ))
         ) : (
-          <li className="px-4 py-2.5 rounded-sm border-neutral-300 bg-neutral-100 border text-neutral-500">
+          <li className="rounded-sm border border-neutral-300 bg-neutral-100 px-4 py-2.5 text-neutral-500">
             There are no sessions yet {":("}
           </li>
         )}
@@ -96,5 +95,5 @@ export default function SelectSessionPopup({
         />
       </footer>
     </div>
-  )
+  );
 }

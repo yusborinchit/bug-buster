@@ -1,34 +1,33 @@
-import { useEffect, useRef, useState } from "react"
-
-import { promiseDb, type DB } from "~/utils/database"
-import { getCurrentUrl } from "~/utils/get-current-url"
+import { useEffect, useRef, useState } from "react";
+import { promiseDb, type DB } from "~/utils/database";
+import { getCurrentUrl } from "~/utils/get-current-url";
 
 export interface Session {
-  id: string
-  site: string
-  href: string
-  name: string
-  createdAt: string
+  id: string;
+  site: string;
+  href: string;
+  name: string;
+  createdAt: string;
 }
 
 export function useSessions() {
-  const dbRef = useRef<DB | null>(null)
+  const dbRef = useRef<DB | null>(null);
 
-  const [sessions, setSessions] = useState<Session[]>([])
+  const [sessions, setSessions] = useState<Session[]>([]);
 
   useEffect(() => {
     promiseDb.then((db) => {
-      dbRef.current = db
+      dbRef.current = db;
       db.getAll("sessions").then((sessions) => {
-        setSessions(sessions)
-      })
-    })
-  }, [])
+        setSessions(sessions);
+      });
+    });
+  }, []);
 
   async function createSession(name: string) {
-    if (!dbRef.current) return
+    if (!dbRef.current) return;
 
-    const url = await getCurrentUrl()
+    const url = await getCurrentUrl();
 
     const newSession: Session = {
       id: crypto.randomUUID(),
@@ -36,16 +35,16 @@ export function useSessions() {
       href: url.href,
       name,
       createdAt: new Date().toISOString()
-    }
+    };
 
-    await dbRef.current.add("sessions", newSession)
-    setSessions((prev) => [...prev, newSession])
+    await dbRef.current.add("sessions", newSession);
+    setSessions((prev) => [...prev, newSession]);
   }
 
   async function deleteSession(id: string) {
-    if (!dbRef.current) return
-    await dbRef.current.delete("sessions", id)
-    setSessions((prev) => prev.filter((s) => s.id !== id))
+    if (!dbRef.current) return;
+    await dbRef.current.delete("sessions", id);
+    setSessions((prev) => prev.filter((s) => s.id !== id));
   }
 
   return {
@@ -53,5 +52,5 @@ export function useSessions() {
     setSessions,
     createSession,
     deleteSession
-  }
+  };
 }

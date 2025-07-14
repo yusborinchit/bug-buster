@@ -1,14 +1,12 @@
-import { useState } from "react"
-
-import type { Data } from "~/hooks/use-data"
-import { useScreenshots, type Screenshot } from "~/hooks/use-screenshots"
-
-import ScreenshotPreviewModal from "./modals/screenshot-preview-modal"
+import { useState } from "react";
+import type { Data } from "~/hooks/use-data";
+import { useScreenshots, type Screenshot } from "~/hooks/use-screenshots";
+import ScreenshotPreviewModal from "./modals/screenshot-preview-modal";
 
 interface Props {
-  label: string
-  data: Data[]
-  className?: string
+  label: string;
+  data: Data[];
+  className?: string;
 }
 
 export default function DataSection({
@@ -16,21 +14,21 @@ export default function DataSection({
   data,
   className = "from-neutral-700 to-neutral-500"
 }: Readonly<Props>) {
-  const { sortedScreenshots } = useScreenshots()
+  const { sortedScreenshots } = useScreenshots();
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [screenshot, setScreenshot] = useState<Screenshot | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [screenshot, setScreenshot] = useState<Screenshot | null>(null);
 
   function handlePreviewScreenshot(screenshot: Screenshot) {
-    setScreenshot(screenshot)
-    setIsModalOpen(true)
+    setScreenshot(screenshot);
+    setIsModalOpen(true);
   }
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-2xl flex items-center gap-2 font-bold tracking-tighter">
+      <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tighter">
         <span
-          className={`p-1.5 rounded-sm bg-gradient-to-t grid place-items-center text-white leading-[1] font-mono ${className}`}>
+          className={`grid place-items-center rounded-sm bg-gradient-to-t p-1.5 font-mono leading-[1] text-white ${className}`}>
           {data.length}
         </span>
         <span>{label}</span>
@@ -41,9 +39,9 @@ export default function DataSection({
             key={d.id}
             id={d.id}
             tabIndex={0}
-            className="p-6 flex flex-col gap-4 rounded-sm border border-neutral-300 bg-neutral-100 focus:ring-2 focus:ring-offset-4 focus:ring-neutral-500">
-            <header className="flex  flex-col gap-1">
-              <div className="flex text-sm text-neutral-500 justify-between items-start">
+            className="flex flex-col gap-4 rounded-sm border border-neutral-300 bg-neutral-100 p-6 focus:ring-2 focus:ring-neutral-500 focus:ring-offset-4">
+            <header className="flex flex-col gap-1">
+              <div className="flex items-start justify-between text-sm text-neutral-500">
                 <div>
                   <p className="">
                     <strong>ID:</strong> #{d.id}
@@ -70,14 +68,14 @@ export default function DataSection({
                       key={`${d.id}-${s.id}`}
                       onClick={() => handlePreviewScreenshot(s)}
                       src={s.url}
-                      className="w-full h-auto object-contain rounded-md"
+                      className="h-auto w-full rounded-md object-contain"
                     />
                   ))}
             </div>
           </article>
         ))
       ) : (
-        <div className="p-6 rounded-sm border border-neutral-300 bg-neutral-100 text-neutral-500">
+        <div className="rounded-sm border border-neutral-300 bg-neutral-100 p-6 text-neutral-500">
           <p>Nothing to show here yet {":("}</p>
         </div>
       )}
@@ -88,5 +86,5 @@ export default function DataSection({
         />
       )}
     </section>
-  )
+  );
 }

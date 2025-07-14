@@ -1,10 +1,9 @@
-import "~/global.css"
-
-import DataPieChart from "~/components/data-pie-chart"
-import DataSection from "~/components/data-section"
-import { useData } from "~/hooks/use-data"
-import { useSessions } from "~/hooks/use-sessions"
-import { getCurrentDuration } from "~/utils/get-current-duration"
+import "~/global.css";
+import DataPieChart from "~/components/data-pie-chart";
+import DataSection from "~/components/data-section";
+import { useData } from "~/hooks/use-data";
+import { useSessions } from "~/hooks/use-sessions";
+import { getCurrentDuration } from "~/utils/get-current-duration";
 
 export const DATA_SECTIONS = [
   { label: "Bugs", type: "bug", className: "from-red-700 to-red-500" },
@@ -15,32 +14,32 @@ export const DATA_SECTIONS = [
     className: "from-green-700 to-green-500"
   },
   { label: "Ideas", type: "idea", className: "from-blue-700 to-blue-500" }
-]
+];
 
 export default function ReportTab() {
-  const sessionId = new URL(location.href).searchParams.get("sessionId")
+  const sessionId = new URL(location.href).searchParams.get("sessionId");
 
-  const { sessions } = useSessions()
-  const { getSessionData } = useData()
+  const { sessions } = useSessions();
+  const { getSessionData } = useData();
 
-  const session = sessions.find((s) => s.id === sessionId)
-  const data = getSessionData(sessionId)
+  const session = sessions.find((s) => s.id === sessionId);
+  const data = getSessionData(sessionId);
 
-  if (!session || !data) return <div>404 Session Not Found</div>
+  if (!session || !data) return <div>404 Session Not Found</div>;
 
-  const duration = getCurrentDuration(session.createdAt)
+  const duration = getCurrentDuration(session.createdAt);
 
   return (
-    <div className="max-w-2xl mx-auto p-6 text-base font-geist flex flex-col gap-4">
+    <div className="mx-auto flex max-w-2xl flex-col gap-4 p-6 font-geist text-base">
       <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-center mx-auto flex items-center gap-2">
+        <h1 className="mx-auto flex items-center gap-2 text-center text-3xl font-bold tracking-tight">
           <span className="text-neutral-500">#</span>
           <span className="flex gap-2">
             <span>Exploratory Session Report:</span>
             <span className="text-neutral-500">"{session.name}"</span>
           </span>
         </h1>
-        <p className="text-neutral-500 text-center">
+        <p className="text-center text-neutral-500">
           The session started on{" "}
           <strong>{new Date(session.createdAt).toLocaleString()}</strong> and
           has been open for <strong>{duration}</strong>.
@@ -48,11 +47,11 @@ export default function ReportTab() {
       </header>
       <main className="flex flex-col">
         {data.length > 0 && (
-          <div className="max-h-[250px] mx-auto mt-2">
+          <div className="mx-auto mt-2 max-h-[250px]">
             <DataPieChart data={data} />
           </div>
         )}
-        <div className="flex flex-col gap-12 mt-10">
+        <div className="mt-10 flex flex-col gap-12">
           {DATA_SECTIONS.map(({ label, type, className }) => (
             <DataSection
               key={label}
@@ -64,5 +63,5 @@ export default function ReportTab() {
         </div>
       </main>
     </div>
-  )
+  );
 }

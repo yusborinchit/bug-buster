@@ -1,21 +1,19 @@
-import { Check, ChevronDown, ImagePlus, ImageUp } from "lucide-react"
-import { useId, useState } from "react"
+import { sendToBackground } from "@plasmohq/messaging";
+import { Check, ChevronDown, ImagePlus, ImageUp } from "lucide-react";
+import { useId, useState } from "react";
+import ScreenshotSelectorModal from "~/components/modals/screenshot-selector-modal";
+import type { Data } from "~/hooks/use-data";
+import type { Screenshot } from "~/hooks/use-screenshots";
+import { removeNotificationBadge } from "~/utils/notification-badge";
 
-import { sendToBackground } from "@plasmohq/messaging"
-
-import ScreenshotSelectorModal from "~/components/modals/screenshot-selector-modal"
-import type { Data } from "~/hooks/use-data"
-import type { Screenshot } from "~/hooks/use-screenshots"
-import { removeNotificationBadge } from "~/utils/notification-badge"
-
-const NO_RELATED_ID = "no related"
+const NO_RELATED_ID = "no related";
 
 interface Props {
-  label: string
-  data: Data[]
-  sessionId: string
-  type: Data["type"]
-  createData: (data: Data) => void
+  label: string;
+  data: Data[];
+  sessionId: string;
+  type: Data["type"];
+  createData: (data: Data) => void;
 }
 
 export default function CreateDataForm({
@@ -25,22 +23,22 @@ export default function CreateDataForm({
   type,
   createData
 }: Readonly<Props>) {
-  const id = useId()
+  const id = useId();
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [screenshots, setScreenshots] = useState<Screenshot[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
 
   function handleCreateData(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    const message = formData.get("message")
-    if (!message || typeof message !== "string") return
+    const message = formData.get("message");
+    if (!message || typeof message !== "string") return;
 
-    const relatedId = formData.get("related-id")
-    if (!relatedId || typeof relatedId !== "string") return
+    const relatedId = formData.get("related-id");
+    if (!relatedId || typeof relatedId !== "string") return;
 
     const data: Data = {
       id: crypto.randomUUID(),
@@ -50,27 +48,27 @@ export default function CreateDataForm({
       message,
       screenshotsIds: screenshots.map((s) => s.id),
       createdAt: new Date().toISOString()
-    }
+    };
 
-    createData(data)
+    createData(data);
 
-    setScreenshots([])
-    form.reset()
+    setScreenshots([]);
+    form.reset();
   }
 
   function handleAttachScreenshot() {
-    removeNotificationBadge()
-    setIsModalOpen(true)
+    removeNotificationBadge();
+    setIsModalOpen(true);
   }
 
   function handleSubmitScreenshot() {
     sendToBackground({
       name: "start-screenshot-selection"
-    })
+    });
   }
 
   function handleSelectScreenshots(selectedScreenshots: Screenshot[]) {
-    setScreenshots(selectedScreenshots)
+    setScreenshots(selectedScreenshots);
   }
 
   return (
@@ -83,7 +81,7 @@ export default function CreateDataForm({
         />
       )}
       <form onSubmit={handleCreateData} className="flex flex-col gap-2">
-        <div className="flex-col flex border border-neutral-300 rounded-sm bg-neutral-100">
+        <div className="flex flex-col rounded-sm border border-neutral-300 bg-neutral-100">
           <label htmlFor={id} className="sr-only">
             New {label}:
           </label>
@@ -92,10 +90,10 @@ export default function CreateDataForm({
             rows={3}
             name="message"
             placeholder={`Add ${label} here...`}
-            className="flex-1 text-xs placeholder:text-neutral-500 bg-neutral-100 resize-none p-2.5"></textarea>
-          <div className="p-2.5 flex gap-2 text-neutral-500 items-center">
+            className="flex-1 resize-none bg-neutral-100 p-2.5 text-xs placeholder:text-neutral-500"></textarea>
+          <div className="flex items-center gap-2 p-2.5 text-neutral-500">
             {screenshots.length > 0 && (
-              <p className="text-xs font-bold font-mono">
+              <p className="font-mono text-xs font-bold">
                 {screenshots.length} Screenshots Attached
               </p>
             )}
@@ -121,7 +119,7 @@ export default function CreateDataForm({
           <select
             id={id}
             name="related-id"
-            className="text-xs p-2.5 appearance-none rounded-sm border border-neutral-300 bg-neutral-100 w-full hover:cursor-pointer">
+            className="w-full appearance-none rounded-sm border border-neutral-300 bg-neutral-100 p-2.5 text-xs hover:cursor-pointer">
             <option value={NO_RELATED_ID} className="text-neutral-500">
               Not related to anything
             </option>
@@ -133,9 +131,9 @@ export default function CreateDataForm({
                 </option>
               ))}
           </select>
-          <ChevronDown className="absolute right-2 top-1/2 z-30 -translate-y-1/2 text-neutral-500 size-4 pointer-events-none" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 z-30 size-4 -translate-y-1/2 text-neutral-500" />
         </div>
       </form>
     </>
-  )
+  );
 }

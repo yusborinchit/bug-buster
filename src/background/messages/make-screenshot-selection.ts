@@ -1,14 +1,13 @@
-import { type PlasmoMessaging } from "@plasmohq/messaging"
-
-import { cropScreenshot } from "~/utils/crop-screenshot"
-import { promiseDb } from "~/utils/database"
-import { createNotificationBadge } from "~/utils/notification-badge"
+import { type PlasmoMessaging } from "@plasmohq/messaging";
+import { cropScreenshot } from "~/utils/crop-screenshot";
+import { promiseDb } from "~/utils/database";
+import { createNotificationBadge } from "~/utils/notification-badge";
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
-  const { body } = req
-  if (!body || typeof body !== "object") return res.send({ status: "error" })
+  const { body } = req;
+  if (!body || typeof body !== "object") return res.send({ status: "error" });
 
-  const { x, y, width, height } = body
+  const { x, y, width, height } = body;
 
   if (
     typeof x !== "number" ||
@@ -16,12 +15,12 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     typeof width !== "number" ||
     typeof height !== "number"
   )
-    return res.send({ status: "error" })
+    return res.send({ status: "error" });
 
   const screenshot = await chrome.tabs.captureVisibleTab(null, {
     format: "jpeg",
     quality: 100
-  })
+  });
 
   const croppedScreenshot = await cropScreenshot(
     screenshot,
@@ -29,19 +28,19 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     y,
     width,
     height
-  )
+  );
 
   promiseDb.then((db) => {
     db.add("screenshots", {
       id: crypto.randomUUID(),
       url: croppedScreenshot,
       createdAt: new Date().toISOString()
-    })
-  })
+    });
+  });
 
-  createNotificationBadge("!")
+  createNotificationBadge("!");
 
-  return res.send({ status: "ok" })
-}
+  return res.send({ status: "ok" });
+};
 
-export default handler
+export default handler;

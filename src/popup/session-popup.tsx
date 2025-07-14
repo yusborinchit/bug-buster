@@ -1,9 +1,8 @@
-import { ChartNoAxesCombined } from "lucide-react"
-import { useEffect, useState } from "react"
-
-import DataForm from "~/components/data-form"
-import type { Data } from "~/hooks/use-data"
-import type { Session } from "~/hooks/use-sessions"
+import { ChartNoAxesCombined } from "lucide-react";
+import { useEffect, useState } from "react";
+import DataForm from "~/components/data-form";
+import type { Data } from "~/hooks/use-data";
+import type { Session } from "~/hooks/use-sessions";
 
 const DATA_FORMS = [
   { label: "Bugs", type: "bug", className: "from-red-700 to-red-500" },
@@ -14,15 +13,15 @@ const DATA_FORMS = [
     className: "from-green-700 to-green-500"
   },
   { label: "Ideas", type: "idea", className: "from-blue-700 to-blue-500" }
-] as const
+] as const;
 
 interface Props {
-  sessions: Session[]
-  route: string
-  navigate: (path: string) => void
-  createData: (data: Data) => void
-  deleteData: (id: string) => void
-  getSessionData: (sessionId: string) => Data[]
+  sessions: Session[];
+  route: string;
+  navigate: (path: string) => void;
+  createData: (data: Data) => void;
+  deleteData: (id: string) => void;
+  getSessionData: (sessionId: string) => Data[];
 }
 
 export default function SessionPopup({
@@ -33,23 +32,23 @@ export default function SessionPopup({
   deleteData,
   getSessionData
 }: Readonly<Props>) {
-  const [session, setSession] = useState<Session | undefined>(undefined)
+  const [session, setSession] = useState<Session | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<Data["type"] | undefined>(
     undefined
-  )
+  );
 
   useEffect(() => {
-    const sessionId = route.split("/").pop()
-    const session = sessions.find((s) => s.id === sessionId)
-    setSession(session)
-  }, [sessions, route])
+    const sessionId = route.split("/").pop();
+    const session = sessions.find((s) => s.id === sessionId);
+    setSession(session);
+  }, [sessions, route]);
 
-  const data = getSessionData(session?.id)
+  const data = getSessionData(session?.id);
 
   function handleCreateReport() {
     chrome.tabs.create({
       url: `/tabs/report.html?sessionId=${session?.id}`
-    })
+    });
   }
 
   return (
@@ -59,11 +58,11 @@ export default function SessionPopup({
           <div className="flex-col gap-2">
             <button
               onClick={() => navigate("/")}
-              className="hover:underline flex w-fit items-center text-xs gap-1">
+              className="flex w-fit items-center gap-1 text-xs hover:underline">
               Go Back
             </button>
-            <h2 className="font-bold text-xl tracking-tight leading-[1] flex gap-1">
-              <span className="text-neutral-500 font-medium">#</span>
+            <h2 className="flex gap-1 text-xl font-bold leading-[1] tracking-tight">
+              <span className="font-medium text-neutral-500">#</span>
               <span>{session.name}</span>
             </h2>
           </div>
@@ -91,5 +90,5 @@ export default function SessionPopup({
         </section>
       </div>
     )
-  )
+  );
 }

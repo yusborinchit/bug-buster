@@ -1,13 +1,12 @@
-import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js"
-import { Pie } from "react-chartjs-2"
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { Pie } from "react-chartjs-2";
+import type { Data } from "~/hooks/use-data";
+import { DATA_SECTIONS } from "~/tabs/report";
 
-import type { Data } from "~/hooks/use-data"
-import { DATA_SECTIONS } from "~/tabs/report"
-
-ChartJS.register(ArcElement, Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface Props {
-  data: Data[]
+  data: Data[];
 }
 
 export default function DataPieChart({ data }: Readonly<Props>) {
@@ -22,7 +21,7 @@ export default function DataPieChart({ data }: Readonly<Props>) {
         borderWidth: 0
       }
     ]
-  }
+  };
 
-  return <Pie data={pieData} />
+  return <Pie data={pieData} />;
 }

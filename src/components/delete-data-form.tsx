@@ -1,12 +1,11 @@
-import { ChevronDown, Trash2 } from "lucide-react"
-import { useId } from "react"
-
-import type { Data } from "~/hooks/use-data"
+import { ChevronDown, Trash2 } from "lucide-react";
+import { useId } from "react";
+import type { Data } from "~/hooks/use-data";
 
 interface Props {
-  data: Data[]
-  label: string
-  deleteData: (id: string) => void
+  data: Data[];
+  label: string;
+  deleteData: (id: string) => void;
 }
 
 export default function DeleteDataForm({
@@ -14,19 +13,19 @@ export default function DeleteDataForm({
   label,
   deleteData
 }: Readonly<Props>) {
-  const id = useId()
+  const id = useId();
 
   function handleDeleteData(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    const id = formData.get("id")
-    if (!id || typeof id !== "string") return
+    const id = formData.get("id");
+    if (!id || typeof id !== "string") return;
 
-    deleteData(id)
-    form.reset()
+    deleteData(id);
+    form.reset();
   }
 
   return (
@@ -39,7 +38,7 @@ export default function DeleteDataForm({
           id={id}
           name="id"
           disabled={data.length === 0}
-          className="text-xs p-2.5 appearance-none rounded-sm border border-neutral-300 bg-neutral-100 w-full hover:cursor-pointer disabled:opacity-50 disabled:hover:cursor-not-allowed">
+          className="w-full appearance-none rounded-sm border border-neutral-300 bg-neutral-100 p-2.5 text-xs hover:cursor-pointer disabled:opacity-50 disabled:hover:cursor-not-allowed">
           {data.length > 0 ? (
             data.map((d) => (
               <option key={d.id} value={d.id}>
@@ -53,15 +52,15 @@ export default function DeleteDataForm({
             </option>
           )}
         </select>
-        <ChevronDown className="absolute right-2 top-1/2 z-30 -translate-y-1/2 text-neutral-500 size-4 pointer-events-none" />
+        <ChevronDown className="pointer-events-none absolute right-2 top-1/2 z-30 size-4 -translate-y-1/2 text-neutral-500" />
       </div>
       <button
         type="submit"
         aria-label="Delete"
         disabled={data.length === 0}
-        className="p-2.5 disabled:opacity-50 disabled:hover:cursor-not-allowed text-neutral-500">
+        className="p-2.5 text-neutral-500 disabled:opacity-50 disabled:hover:cursor-not-allowed">
         <Trash2 className="size-6" />
       </button>
     </form>
-  )
+  );
 }

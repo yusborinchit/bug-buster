@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        geist: ["Geist", "sans-serif"]
+        geist: ["Heebo", "sans-serif"]
       }
     }
   },

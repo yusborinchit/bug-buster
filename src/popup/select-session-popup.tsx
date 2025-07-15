@@ -1,8 +1,13 @@
-import { ArrowDownToLine, ArrowUpToLine, LogIn, Trash2 } from "lucide-react";
+import {
+  ArrowDownToLine,
+  ArrowUpToLine,
+  BrushCleaning,
+  LogIn,
+  Trash2
+} from "lucide-react";
 import { useRef } from "react";
 import CreateSessionForm from "~/components/create-session-form";
 import type { Session } from "~/hooks/use-sessions";
-
 interface Props {
   createSession: (name: string) => void;
   deleteSession: (id: string) => void;
@@ -12,7 +17,6 @@ interface Props {
   handleExport: () => Promise<void>;
   handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
-
 export default function SelectSessionPopup({
   sessions,
   navigate,
@@ -23,77 +27,61 @@ export default function SelectSessionPopup({
   handleImport: importData
 }: Readonly<Props>) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
   return (
     <div className="flex flex-col gap-6">
       <header className="flex items-center justify-between">
-        <h2 className="flex gap-1 text-xl font-bold leading-[1] tracking-tight">
-          <span className="font-medium text-neutral-500">#</span>
-          <span>Current Sessions:</span>
-        </h2>
+        <h2 className="text-xl font-bold tracking-tight">Session Manager</h2>
         <button
-          type="button"
+          className="hover:underline"
           onClick={handleClearAll}
-          className="hover:underline">
-          Clear All
+          type="button">
+          <BrushCleaning className="size-6" />
         </button>
       </header>
-      <ul className="flex flex-col gap-2">
-        {sessions.length > 0 ? (
+      <ul className="flex flex-col gap-3">
+        {sessions.length > 0 &&
           sessions.map((session) => (
             <li
               key={session.id}
-              className="flex gap-2 rounded-sm border border-neutral-300 bg-neutral-100 p-2.5 text-neutral-500">
-              <div className="flex flex-col">
-                <p className="text-black">{session.name}</p>
-                <a
-                  href={session.href}
-                  target="_blank"
-                  className="line-clamp-1 text-xs">
-                  {session.site} &rarr;
-                </a>
+              className="flex items-center justify-between rounded bg-[#EDEDED] px-4 py-2.5">
+              <p>{session.name}</p>
+              <div className="flex items-center gap-1.5 text-neutral-500">
+                <button
+                  aria-label="Delete"
+                  onClick={() => deleteSession(session.id)}>
+                  <Trash2 className="size-6" />
+                </button>
+                <button
+                  aria-label="Enter"
+                  onClick={() => navigate(`/session/${session.id}`)}>
+                  <LogIn className="size-6" />
+                </button>
               </div>
-              <button
-                onClick={() => deleteSession(session.id)}
-                aria-label="Delete"
-                className="ml-auto">
-                <Trash2 className="size-6" />
-              </button>
-              <button
-                onClick={() => navigate(`/session/${session.id}`)}
-                aria-label="Enter">
-                <LogIn className="size-6" />
-              </button>
             </li>
-          ))
-        ) : (
-          <li className="rounded-sm border border-neutral-300 bg-neutral-100 px-4 py-2.5 text-neutral-500">
-            There are no sessions yet {":("}
-          </li>
-        )}
+          ))}
       </ul>
       <CreateSessionForm createSession={createSession} />
-      <footer className="flex items-center justify-end gap-2">
+      {/* <footer className="flex hidden items-center justify-end gap-2">
         <button
-          onClick={exportData}
           aria-label="Export to JSON"
-          className="flex items-center">
+          className="flex items-center"
+          onClick={exportData}>
           <ArrowDownToLine className="size-6" />
         </button>
         <button
-          onClick={() => fileInputRef.current?.click()}
+          className="flex items-center"
           aria-label="Import via JSON"
-          className="flex items-center">
+          onClick={() => fileInputRef.current?.click()}>
           <ArrowUpToLine className="size-6" />
         </button>
         <input
-          onChange={importData}
           ref={fileInputRef}
-          type="file"
           accept=".json"
           className="hidden"
+          onChange={importData}
+          type="file"
         />
-      </footer>
+      </footer> */}
     </div>
   );
 }

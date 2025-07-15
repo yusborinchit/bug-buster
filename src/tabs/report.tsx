@@ -4,31 +4,36 @@ import DataSection from "~/components/data-section";
 import { useData } from "~/hooks/use-data";
 import { useSessions } from "~/hooks/use-sessions";
 import { getCurrentDuration } from "~/utils/get-current-duration";
-
 export const DATA_SECTIONS = [
-  { label: "Bugs", type: "bug", className: "from-red-700 to-red-500" },
-  { label: "Notes", type: "note", className: "from-amber-700 to-amber-500" },
+  {
+    label: "Bugs",
+    type: "bug",
+    className: "from-red-700 to-red-500"
+  },
+  {
+    label: "Notes",
+    type: "note",
+    className: "from-amber-700 to-amber-500"
+  },
   {
     label: "Questions",
     type: "question",
     className: "from-green-700 to-green-500"
   },
-  { label: "Ideas", type: "idea", className: "from-blue-700 to-blue-500" }
+  {
+    label: "Ideas",
+    type: "idea",
+    className: "from-blue-700 to-blue-500"
+  }
 ];
-
 export default function ReportTab() {
   const sessionId = new URL(location.href).searchParams.get("sessionId");
-
   const { sessions } = useSessions();
   const { getSessionData } = useData();
-
   const session = sessions.find((s) => s.id === sessionId);
   const data = getSessionData(sessionId);
-
   if (!session || !data) return <div>404 Session Not Found</div>;
-
   const duration = getCurrentDuration(session.createdAt);
-
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-4 p-6 font-geist text-base">
       <header className="flex flex-col gap-2">
@@ -55,9 +60,9 @@ export default function ReportTab() {
           {DATA_SECTIONS.map(({ label, type, className }) => (
             <DataSection
               key={label}
-              label={label}
-              data={data.filter((d) => d.type === type)}
               className={className}
+              data={data.filter((d) => d.type === type)}
+              label={label}
             />
           ))}
         </div>

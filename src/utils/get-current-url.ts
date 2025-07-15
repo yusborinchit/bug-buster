@@ -3,6 +3,5 @@ export async function getCurrentUrl() {
     active: true,
     lastFocusedWindow: true
   });
-
   return new URL(currentTab.at(0).url);
 }

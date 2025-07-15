@@ -3,16 +3,21 @@ import { Plus } from "lucide-react";
 interface Props {
   createSession: (name: string) => void;
 }
+
 export default function CreateSessionForm({ createSession }: Readonly<Props>) {
   async function handleCreateSession(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const form = event.currentTarget;
     const formData = new FormData(form);
+
     const name = formData.get("session-name");
     if (!name || typeof name !== "string") return;
+
     createSession(name);
     form.reset();
   }
+
   return (
     <form className="flex gap-2.5" onSubmit={handleCreateSession}>
       <label className="sr-only" htmlFor="session-name">

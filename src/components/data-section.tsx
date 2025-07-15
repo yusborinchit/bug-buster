@@ -2,23 +2,28 @@ import { useState } from "react";
 import type { Data } from "~/hooks/use-data";
 import { useScreenshots, type Screenshot } from "~/hooks/use-screenshots";
 import ScreenshotPreviewModal from "./modals/screenshot-preview-modal";
+
 interface Props {
   label: string;
   data: Data[];
   className?: string;
 }
+
 export default function DataSection({
   label,
   data,
   className = "from-neutral-700 to-neutral-500"
 }: Readonly<Props>) {
   const { sortedScreenshots } = useScreenshots();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [screenshot, setScreenshot] = useState<Screenshot | null>(null);
+
   function handlePreviewScreenshot(screenshot: Screenshot) {
     setScreenshot(screenshot);
     setIsModalOpen(true);
   }
+
   return (
     <section className="flex flex-col gap-2">
       <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tighter">

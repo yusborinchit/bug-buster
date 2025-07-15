@@ -16,29 +16,25 @@ export default function ScreenshotSelector() {
   const [pendingCapture, setPendingCapture] = useState<Rect | null>(null);
   const [startPoint, setStartPoint] = useState<Coords | null>(null);
   const [currentRect, setCurrentRect] = useState<Rect | null>(null);
-  useMessage<
-    {
-      id: string;
-    },
-    unknown
-  >(async (req, res) => {
+
+  useMessage<{ id: string }, unknown>(async (req, res) => {
     if (req.name === "start-screenshot-selection") {
       setIsActive(true);
+
       document.body.style.overflow = "hidden";
       document.documentElement.style.cursor = "crosshair";
-      res.send({
-        status: "ok"
-      });
+
+      res.send({ status: "ok" });
     }
   });
+
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
       if (!isActive) return;
+
       event.preventDefault();
-      setStartPoint({
-        x: event.clientX,
-        y: event.clientY
-      });
+
+      setStartPoint({ x: event.clientX, y: event.clientY });
       setCurrentRect({
         x: event.clientX,
         y: event.clientY,
@@ -48,38 +44,42 @@ export default function ScreenshotSelector() {
     },
     [isActive]
   );
+
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       if (!isActive || !startPoint) return;
+
       const x = Math.min(event.clientX, startPoint.x);
       const y = Math.min(event.clientY, startPoint.y);
       const width = Math.abs(event.clientX - startPoint.x);
       const height = Math.abs(event.clientY - startPoint.y);
-      setCurrentRect({
-        x,
-        y,
-        width,
-        height
-      });
+
+      setCurrentRect({ x, y, width, height });
     },
     [isActive, startPoint]
   );
+
   const handleMouseUp = useCallback(async () => {
     if (!isActive || !startPoint || !currentRect) return;
+
     setIsActive(false);
     setStartPoint(null);
     setCurrentRect(null);
+
     document.body.style.overflow = "auto";
     document.documentElement.style.cursor = "auto";
+
     const finalRect = {
       x: currentRect.x,
       y: currentRect.y,
       width: currentRect.width,
       height: currentRect.height
     };
+
     if (finalRect.width < 5 || finalRect.height < 5) return;
     setPendingCapture(finalRect);
   }, [isActive, startPoint, currentRect]);
+
   useEffect(() => {
     if (isActive) {
       document.addEventListener("mousedown", handleMouseDown);
@@ -96,6 +96,7 @@ export default function ScreenshotSelector() {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isActive, handleMouseDown, handleMouseMove, handleMouseUp]);
+
   useEffect(() => {
     if (!isActive && pendingCapture) {
       requestAnimationFrame(() => {
@@ -109,6 +110,7 @@ export default function ScreenshotSelector() {
       });
     }
   }, [isActive, pendingCapture]);
+
   return (
     isActive && (
       <div

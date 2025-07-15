@@ -24,17 +24,22 @@ export default function CreateDataForm({
   createData
 }: Readonly<Props>) {
   const id = useId();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
 
   function handleCreateData(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const form = event.currentTarget;
     const formData = new FormData(form);
+
     const message = formData.get("message");
     if (!message || typeof message !== "string") return;
+
     const relatedId = formData.get("related-id");
     if (!relatedId || typeof relatedId !== "string") return;
+
     const data: Data = {
       id: crypto.randomUUID(),
       related: relatedId === NO_RELATED_ID ? undefined : relatedId,
@@ -44,8 +49,10 @@ export default function CreateDataForm({
       screenshotsIds: screenshots.map((s) => s.id),
       createdAt: new Date().toISOString()
     };
-    createData(data);
+
     setScreenshots([]);
+
+    createData(data);
     form.reset();
   }
 

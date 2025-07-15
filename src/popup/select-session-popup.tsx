@@ -8,6 +8,7 @@ import {
 import { useRef } from "react";
 import CreateSessionForm from "~/components/create-session-form";
 import type { Session } from "~/hooks/use-sessions";
+
 interface Props {
   createSession: (name: string) => void;
   deleteSession: (id: string) => void;
@@ -17,6 +18,7 @@ interface Props {
   handleExport: () => Promise<void>;
   handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
+
 export default function SelectSessionPopup({
   sessions,
   navigate,
@@ -27,6 +29,7 @@ export default function SelectSessionPopup({
   handleImport: importData
 }: Readonly<Props>) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex items-center justify-between">
@@ -61,7 +64,7 @@ export default function SelectSessionPopup({
           ))}
       </ul>
       <CreateSessionForm createSession={createSession} />
-      {/* <footer className="flex hidden items-center justify-end gap-2">
+      <footer className="flex items-center justify-end gap-1">
         <button
           aria-label="Export to JSON"
           className="flex items-center"
@@ -81,7 +84,7 @@ export default function SelectSessionPopup({
           onChange={importData}
           type="file"
         />
-      </footer> */}
+      </footer>
     </div>
   );
 }

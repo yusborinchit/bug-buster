@@ -1,26 +1,33 @@
 import { ChevronDown, Trash2 } from "lucide-react";
 import { useId } from "react";
 import type { Data } from "~/hooks/use-data";
+
 interface Props {
   data: Data[];
   label: string;
   deleteData: (id: string) => void;
 }
+
 export default function DeleteDataForm({
   data,
   label,
   deleteData
 }: Readonly<Props>) {
   const id = useId();
+
   function handleDeleteData(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const form = event.currentTarget;
     const formData = new FormData(form);
+
     const id = formData.get("id");
     if (!id || typeof id !== "string") return;
+
     deleteData(id);
     form.reset();
   }
+
   return (
     <form className="flex items-center" onSubmit={handleDeleteData}>
       <label className="sr-only" htmlFor={id}>

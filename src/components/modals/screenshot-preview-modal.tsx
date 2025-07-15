@@ -1,9 +1,11 @@
 import { X } from "lucide-react";
 import type { Screenshot } from "~/hooks/use-screenshots";
+
 interface Props {
   screenshot: Screenshot;
   closeModal: () => void;
 }
+
 export default function ScreenshotPreviewModal({
   screenshot,
   closeModal

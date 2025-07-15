@@ -8,6 +8,7 @@ export interface Screenshot {
 export function useScreenshots() {
   const dbRef = useRef<DB | null>(null);
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
+
   const { sortedScreenshots } = useMemo(() => {
     return {
       sortedScreenshots: [...screenshots].sort(
@@ -16,6 +17,7 @@ export function useScreenshots() {
       )
     };
   }, [screenshots]);
+
   useEffect(() => {
     promiseDb.then((db) => {
       dbRef.current = db;
@@ -24,6 +26,7 @@ export function useScreenshots() {
       });
     });
   }, []);
+
   return {
     sortedScreenshots
   };

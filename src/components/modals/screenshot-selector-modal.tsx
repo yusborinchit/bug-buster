@@ -1,26 +1,32 @@
 import { Paperclip } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useScreenshots, type Screenshot } from "~/hooks/use-screenshots";
+
 interface Props {
   closeModal: () => void;
   attachedScreenshots: Screenshot[];
   handleSelectScreenshots: (screenshots: Screenshot[]) => void;
 }
+
 export default function ScreenshotSelectorModal({
   closeModal,
   attachedScreenshots,
   handleSelectScreenshots
 }: Readonly<Props>) {
   const { sortedScreenshots } = useScreenshots();
+
   const [selected, setSelected] = useState<Screenshot[]>(attachedScreenshots);
+
   function handleSelect(screenshot: Screenshot) {
     if (selected.some((s) => s.id === screenshot.id))
       return setSelected((prev) => prev.filter((s) => s.id !== screenshot.id));
     setSelected((prev) => [...prev, screenshot]);
   }
+
   useEffect(() => {
     handleSelectScreenshots(selected);
   }, [selected, handleSelectScreenshots]);
+
   return (
     <div
       className="absolute inset-0 z-50 bg-black/50 backdrop-blur-[2px]"

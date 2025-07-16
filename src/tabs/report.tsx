@@ -4,6 +4,7 @@ import DataSection from "~/components/data-section";
 import { useData } from "~/hooks/use-data";
 import { useSessions } from "~/hooks/use-sessions";
 import { getCurrentDuration } from "~/utils/get-current-duration";
+
 export const DATA_SECTIONS = [
   {
     label: "Bugs",
@@ -26,14 +27,20 @@ export const DATA_SECTIONS = [
     className: "from-blue-700 to-blue-500"
   }
 ];
+
 export default function ReportTab() {
   const sessionId = new URL(location.href).searchParams.get("sessionId");
+
   const { sessions } = useSessions();
   const { getSessionData } = useData();
+
   const session = sessions.find((s) => s.id === sessionId);
   const data = getSessionData(sessionId);
+
   if (!session || !data) return <div>404 Session Not Found</div>;
+
   const duration = getCurrentDuration(session.createdAt);
+
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-4 p-6 font-geist text-base">
       <header className="flex flex-col gap-2">

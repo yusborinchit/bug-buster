@@ -1,19 +1,16 @@
 import { ChevronDown, Trash2 } from "lucide-react";
 import { useId } from "react";
-import type { Data } from "~/hooks/use-data";
+import { useData, type Data } from "~/hooks/use-data";
 
 interface Props {
   data: Data[];
   label: string;
-  deleteData: (id: string) => void;
 }
 
-export default function DeleteDataForm({
-  data,
-  label,
-  deleteData
-}: Readonly<Props>) {
+export default function DeleteDataForm({ data, label }: Readonly<Props>) {
   const id = useId();
+
+  const { deleteData } = useData();
 
   function handleDeleteData(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

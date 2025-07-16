@@ -1,10 +1,9 @@
 import { Plus } from "lucide-react";
+import { useSession } from "~/hooks/use-session";
 
-interface Props {
-  createSession: (name: string) => void;
-}
+export default function CreateSessionForm() {
+  const { createSession } = useSession();
 
-export default function CreateSessionForm({ createSession }: Readonly<Props>) {
   async function handleCreateSession(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 

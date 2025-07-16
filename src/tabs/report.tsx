@@ -1,8 +1,11 @@
-import "~/global.css";
 import DataPieChart from "~/components/data-pie-chart";
 import DataSection from "~/components/data-section";
+import { DataProvider } from "~/contexts/data-context";
+import ScreenshotProvider from "~/contexts/screenshot-context";
+import SessionProvider from "~/contexts/session-context";
+import "~/global.css";
 import { useData } from "~/hooks/use-data";
-import { useSessions } from "~/hooks/use-sessions";
+import { useSession } from "~/hooks/use-session";
 import { getCurrentDuration } from "~/utils/get-current-duration";
 
 export const DATA_SECTIONS = [
@@ -28,10 +31,10 @@ export const DATA_SECTIONS = [
   }
 ];
 
-export default function ReportTab() {
+function Report() {
   const sessionId = new URL(location.href).searchParams.get("sessionId");
 
-  const { sessions } = useSessions();
+  const { sessions } = useSession();
   const { getSessionData } = useData();
 
   const session = sessions.find((s) => s.id === sessionId);
@@ -75,5 +78,17 @@ export default function ReportTab() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ReportWrapper() {
+  return (
+    <SessionProvider>
+      <DataProvider>
+        <ScreenshotProvider>
+          <Report />
+        </ScreenshotProvider>
+      </DataProvider>
+    </SessionProvider>
   );
 }

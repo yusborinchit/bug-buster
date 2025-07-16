@@ -1,6 +1,6 @@
 import type { Data } from "~/hooks/use-data";
-import type { Screenshot } from "~/hooks/use-screenshots";
-import type { Session } from "~/hooks/use-sessions";
+import type { Screenshot } from "~/hooks/use-screenshot";
+import type { Session } from "~/hooks/use-session";
 import { promiseDb } from "./database";
 
 export async function importDb(

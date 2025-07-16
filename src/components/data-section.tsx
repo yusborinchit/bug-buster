@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Data } from "~/hooks/use-data";
-import { useScreenshots, type Screenshot } from "~/hooks/use-screenshots";
+import { useScreenshot, type Screenshot } from "~/hooks/use-screenshot";
 import ScreenshotPreviewModal from "./modals/screenshot-preview-modal";
 
 interface Props {
@@ -14,7 +14,7 @@ export default function DataSection({
   data,
   className = "from-neutral-700 to-neutral-500"
 }: Readonly<Props>) {
-  const { sortedScreenshots } = useScreenshots();
+  const { screenshots } = useScreenshot();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [screenshot, setScreenshot] = useState<Screenshot | null>(null);
@@ -61,7 +61,7 @@ export default function DataSection({
             </header>
             <div className="grid grid-cols-4 gap-4">
               {d.screenshotsIds.length > 0 &&
-                sortedScreenshots
+                screenshots
                   .filter((s) => d.screenshotsIds.some((id) => id === s.id))
                   .map((s) => (
                     <img

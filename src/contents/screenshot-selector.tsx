@@ -1,16 +1,19 @@
 import { sendToBackground } from "@plasmohq/messaging";
 import { useMessage } from "@plasmohq/messaging/hook";
 import { useCallback, useEffect, useState } from "react";
+
 interface Coords {
   x: number;
   y: number;
 }
+
 interface Rect {
   x: number;
   y: number;
   width: number;
   height: number;
 }
+
 export default function ScreenshotSelector() {
   const [isActive, setIsActive] = useState(false);
   const [pendingCapture, setPendingCapture] = useState<Rect | null>(null);

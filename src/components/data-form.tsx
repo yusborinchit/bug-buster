@@ -1,8 +1,8 @@
 import { Minus, Plus } from "lucide-react";
-import type { Data } from "~/hooks/use-data";
+import type { CSSProperties } from "react";
+import { type Data } from "~/hooks/use-data";
 import CreateDataForm from "./create-data-form";
 import DeleteDataForm from "./delete-data-form";
-import type { CSSProperties } from "react";
 
 interface Props {
   data: Data[];
@@ -11,8 +11,6 @@ interface Props {
   onSelect: () => void;
   sessionId: string;
   type: Data["type"];
-  createData: (data: Data) => void;
-  deleteData: (id: string) => void;
   color: string;
 }
 
@@ -23,8 +21,6 @@ export default function DataForm({
   onSelect,
   sessionId,
   type,
-  createData,
-  deleteData,
   color
 }: Readonly<Props>) {
   return (
@@ -48,7 +44,6 @@ export default function DataForm({
       {isSelected && (
         <>
           <CreateDataForm
-            createData={createData}
             data={data}
             label={label}
             sessionId={sessionId}
@@ -59,7 +54,7 @@ export default function DataForm({
               Or
             </p>
           </div>
-          <DeleteDataForm data={data} deleteData={deleteData} label={label} />
+          <DeleteDataForm data={data} label={label} />
         </>
       )}
     </section>

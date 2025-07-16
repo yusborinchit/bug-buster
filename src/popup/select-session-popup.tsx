@@ -7,28 +7,24 @@ import {
 } from "lucide-react";
 import { useRef } from "react";
 import CreateSessionForm from "~/components/create-session-form";
-import type { Session } from "~/hooks/use-sessions";
+import { useRoute } from "~/hooks/use-route";
+import { useSession } from "~/hooks/use-session";
 
 interface Props {
-  createSession: (name: string) => void;
-  deleteSession: (id: string) => void;
-  sessions: Session[];
-  navigate: (path: string) => void;
   handleClearAll: () => Promise<void>;
   handleExport: () => Promise<void>;
   handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
 export default function SelectSessionPopup({
-  sessions,
-  navigate,
-  createSession,
-  deleteSession,
   handleClearAll,
-  handleExport: exportData,
-  handleImport: importData
+  handleExport,
+  handleImport
 }: Readonly<Props>) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const { navigate } = useRoute();
+  const { sessions, deleteSession } = useSession();
 
   return (
     <div className="flex flex-col gap-6">
@@ -63,12 +59,12 @@ export default function SelectSessionPopup({
             </li>
           ))}
       </ul>
-      <CreateSessionForm createSession={createSession} />
+      <CreateSessionForm />
       <footer className="flex items-center justify-end gap-1">
         <button
           aria-label="Export to JSON"
           className="flex items-center"
-          onClick={exportData}>
+          onClick={handleExport}>
           <ArrowDownToLine className="size-6" />
         </button>
         <button
@@ -81,7 +77,7 @@ export default function SelectSessionPopup({
           ref={fileInputRef}
           accept=".json"
           className="hidden"
-          onChange={importData}
+          onChange={handleImport}
           type="file"
         />
       </footer>

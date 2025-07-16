@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import type { Screenshot } from "~/hooks/use-screenshots";
+import type { Screenshot } from "~/hooks/use-screenshot";
 
 interface Props {
   screenshot: Screenshot;

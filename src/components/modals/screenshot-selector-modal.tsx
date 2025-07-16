@@ -1,6 +1,6 @@
 import { Paperclip } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useScreenshots, type Screenshot } from "~/hooks/use-screenshots";
+import { useScreenshot, type Screenshot } from "~/hooks/use-screenshot";
 
 interface Props {
   closeModal: () => void;
@@ -13,7 +13,7 @@ export default function ScreenshotSelectorModal({
   attachedScreenshots,
   handleSelectScreenshots
 }: Readonly<Props>) {
-  const { sortedScreenshots } = useScreenshots();
+  const { screenshots } = useScreenshot();
 
   const [selected, setSelected] = useState<Screenshot[]>(attachedScreenshots);
 
@@ -45,7 +45,7 @@ export default function ScreenshotSelectorModal({
           </h2>
         </header>
         <div className="grid grid-cols-4 gap-2">
-          {sortedScreenshots.slice(0, 8).map((screenshot) => (
+          {screenshots.slice(0, 8).map((screenshot) => (
             <picture
               key={screenshot.id}
               className="group relative grid aspect-[2/3] place-items-center rounded-sm shadow"

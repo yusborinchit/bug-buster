@@ -1,18 +1,18 @@
-import { useData } from "~/hooks/use-data";
+import "~/global.css";
+
+import { DataProvider } from "~/contexts/data-context";
+import RouteProvider from "~/contexts/route-context";
+import ScreenshotProvider from "~/contexts/screenshot-context";
+import SessionProvider from "~/contexts/session-context";
 import { useRoute } from "~/hooks/use-route";
-import { useSessions } from "~/hooks/use-sessions";
 import { clearAllDb } from "~/utils/clear-all-db";
 import { exportDb } from "~/utils/export-db";
 import { importDb } from "~/utils/import-db";
 import SelectSessionPopup from "./select-session-popup";
 import SessionPopup from "./session-popup";
-import "~/global.css";
 
-export default function MainPopup() {
-  const { route, navigate } = useRoute();
-
-  const { sessions, createSession, deleteSession } = useSessions();
-  const { createData, deleteData, getSessionData } = useData();
+function Popup() {
+  const { route } = useRoute();
 
   async function handleExport() {
     await exportDb();
@@ -46,29 +46,32 @@ export default function MainPopup() {
   }
 
   return (
-    <div className="inline-block min-w-[350px] bg-white p-6 font-geist text-base">
-      {route === "/" ? (
-        <SelectSessionPopup
-          createSession={createSession}
-          deleteSession={deleteSession}
-          handleClearAll={handleClearAll}
-          handleExport={handleExport}
-          handleImport={handleImport}
-          navigate={navigate}
-          sessions={sessions}
-        />
-      ) : route.match(/^\/session\/*/) ? (
-        <SessionPopup
-          createData={createData}
-          deleteData={deleteData}
-          getSessionData={getSessionData}
-          navigate={navigate}
-          route={route}
-          sessions={sessions}
-        />
-      ) : (
-        <div>404 Not Found</div>
-      )}
-    </div>
+    <SessionProvider>
+      <DataProvider>
+        <ScreenshotProvider>
+          <div className="inline-block min-w-[350px] bg-white p-6 font-geist text-base">
+            {route === "/" ? (
+              <SelectSessionPopup
+                handleClearAll={handleClearAll}
+                handleExport={handleExport}
+                handleImport={handleImport}
+              />
+            ) : route.match(/^\/session\/*/) ? (
+              <SessionPopup />
+            ) : (
+              <div>404 Not Found</div>
+            )}
+          </div>
+        </ScreenshotProvider>
+      </DataProvider>
+    </SessionProvider>
+  );
+}
+
+export default function PopupWrapper() {
+  return (
+    <RouteProvider>
+      <Popup />
+    </RouteProvider>
   );
 }

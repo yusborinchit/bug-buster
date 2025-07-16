@@ -1,23 +1,30 @@
-import { useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
+import type { Session } from "~/hooks/use-session";
 import { promiseDb, type DB } from "~/utils/database";
 import { getCurrentUrl } from "~/utils/get-current-url";
-export interface Session {
-  id: string;
-  site: string;
-  href: string;
-  name: string;
-  createdAt: string;
+
+export const SessionContext = createContext<
+  | {
+      sessions: Session[];
+      setSessions: (sessions: Session[]) => void;
+      createSession: (name: string) => void;
+      deleteSession: (id: string) => void;
+    }
+  | undefined
+>(undefined);
+
+interface Props {
+  children: React.ReactNode;
 }
-export function useSessions() {
+
+export default function SessionProvider({ children }: Readonly<Props>) {
   const dbRef = useRef<DB | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
 
   useEffect(() => {
     promiseDb.then((db) => {
       dbRef.current = db;
-      db.getAll("sessions").then((sessions) => {
-        setSessions(sessions);
-      });
+      db.getAll("sessions").then(setSessions);
     });
   }, []);
 
@@ -43,10 +50,10 @@ export function useSessions() {
     setSessions((prev) => prev.filter((s) => s.id !== id));
   }
 
-  return {
-    sessions,
-    setSessions,
-    createSession,
-    deleteSession
-  };
+  return (
+    <SessionContext.Provider
+      value={{ sessions, createSession, deleteSession, setSessions }}>
+      {children}
+    </SessionContext.Provider>
+  );
 }

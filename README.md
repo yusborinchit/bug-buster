@@ -15,13 +15,34 @@ BugBuster is a powerful browser extension designed to streamline and enhance you
   - Benefit: Saves time in writing detailed bug reports and ensures all necessary information is included.
 
 - **Test Notes & Observations**: Add free-form text notes and observations at any point during your session.
+
   - Benefit: Document hypotheses, insights, and areas for further investigation.
+
 - **Session Management**: Use and manage multiple testing sessions.
 
   - Benefit: Keeps your testing organized and allows you to switch contexts easily.
 
 - **Export and Import Data**: Export and import your testing sessions and notes.
+
   - Benefit: Save time and effort by reusing your testing sessions and notes across different devices.
+
+## 📝 Future Plans
+
+- Improve the user interface and user experience.
+
+- Implement more advanced features, such as:
+
+  - Attach screen recordings to notes.
+  - Add tags and labels to notes, such as "critical" or "high priority".
+  - Generate a .docx from all the session notes.
+
+- Improve error handling and robustness.
+
+- Improve performance and stability.
+
+- Add more languages support.
+
+- Expand the extension to other web browsers, such as Firefox and Edge (Maybe).
 
 ## 📦 Installation
 

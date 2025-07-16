@@ -1,9 +1,9 @@
 import { sendToBackground } from "@plasmohq/messaging";
-import { Check, ChevronDown, ImagePlus, ImageUp, Send } from "lucide-react";
+import { ChevronDown, ImagePlus, ImageUp, Send } from "lucide-react";
 import { useId, useState } from "react";
 import ScreenshotSelectorModal from "~/components/modals/screenshot-selector-modal";
-import type { Data } from "~/hooks/use-data";
-import type { Screenshot } from "~/hooks/use-screenshots";
+import { useData, type Data } from "~/hooks/use-data";
+import type { Screenshot } from "~/hooks/use-screenshot";
 import { removeNotificationBadge } from "~/utils/notification-badge";
 
 const NO_RELATED_ID = "no related";
@@ -13,17 +13,17 @@ interface Props {
   data: Data[];
   sessionId: string;
   type: Data["type"];
-  createData: (data: Data) => void;
 }
 
 export default function CreateDataForm({
   label,
   data,
   sessionId,
-  type,
-  createData
+  type
 }: Readonly<Props>) {
   const id = useId();
+
+  const { createData } = useData();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);

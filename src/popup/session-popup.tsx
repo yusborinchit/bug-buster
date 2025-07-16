@@ -1,8 +1,10 @@
 import { ChartNoAxesCombined } from "lucide-react";
 import { useEffect, useState } from "react";
 import DataForm from "~/components/data-form";
-import type { Data } from "~/hooks/use-data";
-import type { Session } from "~/hooks/use-sessions";
+import { useData, type Data } from "~/hooks/use-data";
+import { useRoute } from "~/hooks/use-route";
+import { useSession, type Session } from "~/hooks/use-session";
+
 const DATA_FORMS = [
   {
     label: "Bugs",
@@ -25,37 +27,31 @@ const DATA_FORMS = [
     color: "#2b7fff"
   }
 ] as const;
-interface Props {
-  sessions: Session[];
-  route: string;
-  navigate: (path: string) => void;
-  createData: (data: Data) => void;
-  deleteData: (id: string) => void;
-  getSessionData: (sessionId: string) => Data[];
-}
-export default function SessionPopup({
-  sessions,
-  route,
-  navigate,
-  createData,
-  deleteData,
-  getSessionData
-}: Readonly<Props>) {
+
+export default function SessionPopup() {
+  const { route, navigate } = useRoute();
+  const { sessions } = useSession();
+  const { createData, deleteData, getSessionData } = useData();
+
   const [session, setSession] = useState<Session | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<Data["type"] | undefined>(
     undefined
   );
+
+  const data = getSessionData(session?.id);
+
   useEffect(() => {
     const sessionId = route.split("/").pop();
     const session = sessions.find((s) => s.id === sessionId);
     setSession(session);
   }, [sessions, route]);
-  const data = getSessionData(session?.id);
+
   function handleCreateReport() {
     chrome.tabs.create({
       url: `/tabs/report.html?sessionId=${session?.id}`
     });
   }
+
   return (
     session && (
       <div className="flex flex-col gap-6">
@@ -77,9 +73,7 @@ export default function SessionPopup({
             <DataForm
               key={label}
               color={color}
-              createData={createData}
               data={data.filter((d) => d.type === type)}
-              deleteData={deleteData}
               isSelected={selectedType === type}
               label={label}
               onSelect={() =>

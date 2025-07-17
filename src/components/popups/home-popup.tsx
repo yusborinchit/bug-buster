@@ -6,7 +6,7 @@ import {
   Trash2
 } from "lucide-react";
 import { useRef } from "react";
-import CreateSessionForm from "~/components/create-session-form";
+import CreateSessionForm from "~/components/forms/create-session-form";
 import { useRoute } from "~/hooks/use-route";
 import { useSession } from "~/hooks/use-session";
 
@@ -16,7 +16,7 @@ interface Props {
   handleImport: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
-export default function SelectSessionPopup({
+export default function HomePopup({
   handleClearAll,
   handleExport,
   handleImport

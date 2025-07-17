@@ -1,4 +1,4 @@
-import DataPieChart from "~/components/data-pie-chart";
+import DataPieChart from "~/components/charts/data-pie-chart";
 import DataSection from "~/components/data-section";
 import { DataProvider } from "~/contexts/data-context";
 import ScreenshotProvider from "~/contexts/screenshot-context";

@@ -1,6 +1,6 @@
 import { ChartNoAxesCombined } from "lucide-react";
 import { useEffect, useState } from "react";
-import DataForm from "~/components/data-form";
+import DataForm from "~/components/forms/data-form";
 import { useData, type Data } from "~/hooks/use-data";
 import { useRoute } from "~/hooks/use-route";
 import { useSession, type Session } from "~/hooks/use-session";

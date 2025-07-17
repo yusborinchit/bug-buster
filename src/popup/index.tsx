@@ -8,8 +8,8 @@ import { useRoute } from "~/hooks/use-route";
 import { clearAllDb } from "~/utils/clear-all-db";
 import { exportDb } from "~/utils/export-db";
 import { importDb } from "~/utils/import-db";
-import SelectSessionPopup from "./select-session-popup";
-import SessionPopup from "./session-popup";
+import HomePopup from "../components/popups/home-popup";
+import SessionPopup from "../components/popups/session-popup";
 
 function Popup() {
   const { route } = useRoute();
@@ -51,7 +51,7 @@ function Popup() {
         <ScreenshotProvider>
           <div className="inline-block min-w-[350px] bg-white p-6 font-geist text-base">
             {route === "/" ? (
-              <SelectSessionPopup
+              <HomePopup
                 handleClearAll={handleClearAll}
                 handleExport={handleExport}
                 handleImport={handleImport}

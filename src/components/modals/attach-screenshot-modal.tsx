@@ -19,7 +19,7 @@ export default function AttachScreenshotModal({
   const { sessionId, screenshotsIds: selectedIdsString } = searchParams;
   if (!sessionId || typeof sessionId !== "string") navigate("/404");
 
-  const screenshots = getScreenshotsBySessionId(sessionId);
+  const screenshots = getScreenshotsBySessionId(sessionId).slice(0, 8);
   const selectedIds =
     selectedIdsString && selectedIdsString !== ""
       ? selectedIdsString.split(",")
@@ -79,6 +79,11 @@ export default function AttachScreenshotModal({
             </picture>
           ))}
         </div>
+        <button
+          onClick={handleCloseModal}
+          className="rounded bg-[var(--color)] px-4 py-3 text-base font-semibold text-white">
+          Attach {selectedIds.length} Screenshots
+        </button>
       </section>
     </div>
   );

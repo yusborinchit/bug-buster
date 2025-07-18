@@ -54,6 +54,7 @@ export default function FormPopup() {
           <button
             type="button"
             onClick={handleGoToSession}
+            title="Exit Form"
             className="px-4 py-3 text-white">
             <span className="sr-only">Go Back</span>
             <ArrowLeft className="size-6" />

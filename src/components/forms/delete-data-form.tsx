@@ -54,6 +54,7 @@ export default function DeleteDataForm({ data, form }: Readonly<Props>) {
         <button
           type="submit"
           disabled={isDisabled}
+          title="Delete"
           className="text-[var(--color)] disabled:cursor-not-allowed disabled:opacity-50">
           <span className="sr-only">Delete {form.label.singular}</span>
           <Trash2 className="size-6" />

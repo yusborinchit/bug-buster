@@ -4,6 +4,7 @@ interface Props {
   children: React.ReactNode;
   id: string;
   name: string;
+  title?: string;
   isDisabled?: boolean;
 }
 
@@ -11,11 +12,13 @@ export default function Select({
   children,
   id,
   name,
+  title,
   isDisabled = false
 }: Readonly<Props>) {
   return (
     <div
       data-is-disabled={isDisabled}
+      {...(title && { title })}
       className="group relative flex flex-1 items-center rounded border border-zinc-500 focus-within:border-[var(--color)] focus-within:outline focus-within:outline-1 focus-within:outline-[var(--color)] data-[is-disabled=true]:opacity-50">
       <select
         id={id}

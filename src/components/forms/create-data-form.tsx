@@ -122,21 +122,25 @@ export default function CreateDataForm({
           <button
             type="button"
             onClick={handleAttachScreenshot}
+            title="Attach Screenshot"
             className="ml-auto">
             <span className="sr-only">Attach Screenshot</span>
             <ImagePlus className="size-6" />
           </button>
-          <button type="button" onClick={handleUploadScreenshot}>
+          <button
+            type="button"
+            onClick={handleUploadScreenshot}
+            title="Upload Screenshot">
             <span className="sr-only">Upload Screenshot</span>
             <ImageUp className="size-6" />
           </button>
-          <button type="submit">
+          <button type="submit" title="Create">
             <span className="sr-only">Create {form.label.singular}</span>
             <Send className="size-6" />
           </button>
         </div>
       </div>
-      <Select id="bug-id" name="bug-id">
+      <Select id="bug-id" name="bug-id" title="Select Related">
         <option value={NO_RELATED_TO_ANY_DATA}>
           No Related To Any {form.label.singular}
         </option>

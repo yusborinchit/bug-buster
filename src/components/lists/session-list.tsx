@@ -29,11 +29,15 @@ export default function SessionList() {
           <div className="ml-auto flex gap-2 px-4">
             <button
               onClick={handleLoginIntoSession(session.id)}
+              title="Enter Session"
               className="py-3">
               <span className="sr-only">Login</span>
               <LogIn className="size-6" />
             </button>
-            <button onClick={handleDeleteSession(session.id)} className="py-3">
+            <button
+              onClick={handleDeleteSession(session.id)}
+              title="Delete Session"
+              className="py-3">
               <span className="sr-only">Delete</span>
               <Trash2 className="size-6" />
             </button>

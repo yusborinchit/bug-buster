@@ -30,7 +30,10 @@ export default function CreateSessionForm() {
         placeholder="Your Session Name Here..."
         className="w-full rounded border border-zinc-500 px-4 py-3 placeholder:text-zinc-500"
       />
-      <button type="submit" className="rounded bg-red-600 p-3 text-white">
+      <button
+        type="submit"
+        title="Create Session"
+        className="rounded bg-red-600 p-3 text-white">
         <span className="sr-only">Create Session</span>
         <Plus className="size-6" />
       </button>

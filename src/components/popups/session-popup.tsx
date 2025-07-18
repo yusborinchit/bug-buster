@@ -45,7 +45,7 @@ export default function SessionPopup() {
             </p>
             <h2 className="text-xl font-black">Session: {session.name}</h2>
           </div>
-          <button onClick={handleGoToReport}>
+          <button onClick={handleGoToReport} title="Generate Report">
             <span className="sr-only">Generate Report</span>
             <ChartNoAxesCombined className="size-6" />
           </button>
@@ -59,7 +59,10 @@ export default function SessionPopup() {
               <span className="px-4 py-3 font-medium">
                 {getDataLength(form.type)} {form.label.plural}
               </span>
-              <button onClick={handleGoToForm(form.type)} className="px-4 py-3">
+              <button
+                onClick={handleGoToForm(form.type)}
+                title="Enter Form"
+                className="px-4 py-3">
                 <span className="sr-only">Add {form.label.singular}</span>
                 <ArrowRight className="size-6" />
               </button>

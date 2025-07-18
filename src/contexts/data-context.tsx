@@ -6,9 +6,9 @@ export const DataContext = createContext<
   | {
       data: Data[];
       setData: (data: Data[]) => void;
-      createData: (newData: Data) => void;
-      deleteData: (id: string) => void;
-      getSessionData: (sessionId: string) => Data[];
+      getDataBySessionId: (sessionId: string) => Data[];
+      createData: (newData: Data) => Promise<void>;
+      deleteData: (id: string) => Promise<void>;
     }
   | undefined
 >(undefined);
@@ -28,6 +28,10 @@ export function DataProvider({ children }: Readonly<Props>) {
     });
   }, []);
 
+  function getDataBySessionId(sessionId: string) {
+    return data.filter((d) => d.sessionId === sessionId);
+  }
+
   async function createData(newData: Data) {
     if (!dbRef.current) return;
     await dbRef.current.add("data", newData);
@@ -40,13 +44,9 @@ export function DataProvider({ children }: Readonly<Props>) {
     setData((prev) => prev.filter((d) => d.id !== id));
   }
 
-  function getSessionData(sessionId: string) {
-    return data.filter((d) => d.sessionId === sessionId);
-  }
-
   return (
     <DataContext.Provider
-      value={{ data, setData, createData, deleteData, getSessionData }}>
+      value={{ data, setData, getDataBySessionId, createData, deleteData }}>
       {children}
     </DataContext.Provider>
   );

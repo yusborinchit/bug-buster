@@ -1,10 +1,11 @@
 import { Plus } from "lucide-react";
+import type { FormEvent } from "react";
 import { useSession } from "~/hooks/use-session";
 
 export default function CreateSessionForm() {
   const { createSession } = useSession();
 
-  async function handleCreateSession(event: React.FormEvent<HTMLFormElement>) {
+  function handleCreateSession(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -18,22 +19,19 @@ export default function CreateSessionForm() {
   }
 
   return (
-    <form className="flex gap-2.5" onSubmit={handleCreateSession}>
-      <label className="sr-only" htmlFor="session-name">
-        Session Name:
+    <form onSubmit={handleCreateSession} className="flex gap-2">
+      <label htmlFor="session-name" className="sr-only">
+        Session Name
       </label>
       <input
         id="session-name"
-        autoComplete="off"
-        className="flex-1 rounded border border-neutral-300 px-4 py-2.5 text-sm placeholder:text-neutral-500"
-        type="text"
         name="session-name"
-        placeholder="Session name here..."
+        type="text"
+        placeholder="Your Session Name Here..."
+        className="w-full rounded border border-zinc-500 px-4 py-3 placeholder:text-zinc-500"
       />
-      <button
-        className="grid place-items-center rounded bg-black p-2.5 text-white"
-        type="submit"
-        aria-label="Create Session">
+      <button type="submit" className="rounded bg-red-600 p-3 text-white">
+        <span className="sr-only">Create Session</span>
         <Plus className="size-6" />
       </button>
     </form>

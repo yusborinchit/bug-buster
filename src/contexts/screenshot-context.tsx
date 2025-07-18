@@ -5,6 +5,7 @@ import { promiseDb, type DB } from "~/utils/database";
 export const ScreenshotContext = createContext<
   | {
       screenshots: Screenshot[];
+      getScreenshotsBySessionId: (sessionId: string) => Screenshot[];
       setScreenshots: (screenshots: Screenshot[]) => void;
       createScreenshot: (screenshot: Screenshot) => void;
       deleteScreenshot: (id: string) => void;
@@ -31,6 +32,10 @@ export default function ScreenshotProvider({ children }: Readonly<Props>) {
     });
   }, []);
 
+  function getScreenshotsBySessionId(sessionId: string) {
+    return screenshots.filter((s) => s.sessionId === sessionId);
+  }
+
   async function createScreenshot(screenshot: Screenshot) {
     if (!dbRef.current) return;
     await dbRef.current.add("screenshots", screenshot);
@@ -47,6 +52,7 @@ export default function ScreenshotProvider({ children }: Readonly<Props>) {
     <ScreenshotContext.Provider
       value={{
         screenshots,
+        getScreenshotsBySessionId,
         setScreenshots,
         createScreenshot,
         deleteScreenshot

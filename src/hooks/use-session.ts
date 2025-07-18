@@ -11,6 +11,6 @@ export interface Session {
 
 export function useSession() {
   const context = useContext(SessionContext);
-  // if (!context) throw new Error("SessionContext not found");
+  if (!context) throw new Error("SessionContext not found");
   return context;
 }

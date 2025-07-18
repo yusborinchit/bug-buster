@@ -13,6 +13,6 @@ export interface Data {
 
 export function useData() {
   const context = useContext(DataContext);
-  // if (!context) throw new Error("DataContext not found");
+  if (!context) throw new Error("DataContext not found");
   return context;
 }

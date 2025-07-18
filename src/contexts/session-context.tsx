@@ -1,11 +1,12 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import type { Session } from "~/hooks/use-session";
 import { promiseDb, type DB } from "~/utils/database";
-import { getCurrentUrl } from "~/utils/get-current-url";
+import { getActiveSiteUrl } from "~/utils/get-current-url";
 
 export const SessionContext = createContext<
   | {
       sessions: Session[];
+      getSessionById: (sessionId: string) => Session | undefined;
       setSessions: (sessions: Session[]) => void;
       createSession: (name: string) => void;
       deleteSession: (id: string) => void;
@@ -28,10 +29,14 @@ export default function SessionProvider({ children }: Readonly<Props>) {
     });
   }, []);
 
+  function getSessionById(sessionId: string) {
+    return [...sessions].find((s) => s.id === sessionId);
+  }
+
   async function createSession(name: string) {
     if (!dbRef.current) return;
 
-    const url = await getCurrentUrl();
+    const url = await getActiveSiteUrl();
     const newSession: Session = {
       id: crypto.randomUUID(),
       site: url.hostname,
@@ -52,7 +57,13 @@ export default function SessionProvider({ children }: Readonly<Props>) {
 
   return (
     <SessionContext.Provider
-      value={{ sessions, createSession, deleteSession, setSessions }}>
+      value={{
+        sessions,
+        getSessionById,
+        createSession,
+        deleteSession,
+        setSessions
+      }}>
       {children}
     </SessionContext.Provider>
   );

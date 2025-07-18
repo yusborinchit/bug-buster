@@ -1,9 +1,10 @@
+import "~/global.css";
+
 import DataPieChart from "~/components/charts/data-pie-chart";
 import DataSection from "~/components/data-section";
 import { DataProvider } from "~/contexts/data-context";
 import ScreenshotProvider from "~/contexts/screenshot-context";
 import SessionProvider from "~/contexts/session-context";
-import "~/global.css";
 import { useData } from "~/hooks/use-data";
 import { useSession } from "~/hooks/use-session";
 import { getCurrentDuration } from "~/utils/get-current-duration";
@@ -35,10 +36,10 @@ function Report() {
   const sessionId = new URL(location.href).searchParams.get("sessionId");
 
   const { sessions } = useSession();
-  const { getSessionData } = useData();
+  const { getDataBySessionId } = useData();
 
   const session = sessions.find((s) => s.id === sessionId);
-  const data = getSessionData(sessionId);
+  const data = getDataBySessionId(sessionId);
 
   if (!session || !data) return <div>404 Session Not Found</div>;
 

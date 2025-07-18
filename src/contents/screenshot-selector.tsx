@@ -1,6 +1,7 @@
 import { sendToBackground } from "@plasmohq/messaging";
 import { useMessage } from "@plasmohq/messaging/hook";
 import { useCallback, useEffect, useState } from "react";
+import { ABSURD_HIGH_Z_INDEX } from "~/utils/const";
 
 interface Coords {
   x: number;
@@ -18,11 +19,17 @@ export default function ScreenshotSelector() {
   const [isActive, setIsActive] = useState(false);
   const [pendingCapture, setPendingCapture] = useState<Rect | null>(null);
   const [startPoint, setStartPoint] = useState<Coords | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [currentRect, setCurrentRect] = useState<Rect | null>(null);
 
-  useMessage<{ id: string }, unknown>(async (req, res) => {
+  useMessage<{ sessionId: string }, unknown>(async (req, res) => {
     if (req.name === "start-screenshot-selection") {
+      const { sessionId } = req.body;
+      if (!sessionId || typeof sessionId !== "string")
+        return res.send({ status: "error" });
+
       setIsActive(true);
+      setSessionId(sessionId);
 
       document.body.style.overflow = "hidden";
       document.documentElement.style.cursor = "crosshair";
@@ -103,12 +110,13 @@ export default function ScreenshotSelector() {
   useEffect(() => {
     if (!isActive && pendingCapture) {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          sendToBackground({
+        requestAnimationFrame(async () => {
+          await sendToBackground({
             name: "make-screenshot-selection",
-            body: pendingCapture
+            body: { ...pendingCapture, sessionId }
           });
           setPendingCapture(null);
+          setSessionId(null);
         });
       });
     }
@@ -123,8 +131,10 @@ export default function ScreenshotSelector() {
           left: 0,
           width: "100vw",
           height: "100vh",
-          pointerEvents: "all",
-          zIndex: 9999999998
+          pointerEvents: "none",
+          zIndex: ABSURD_HIGH_Z_INDEX,
+          boxSizing: "border-box",
+          border: "3px solid red"
         }}>
         {currentRect && (
           <div
@@ -139,7 +149,7 @@ export default function ScreenshotSelector() {
               borderStyle: "dashed",
               backgroundColor: "#4752ba",
               opacity: 0.3,
-              zIndex: 9999999999
+              zIndex: ABSURD_HIGH_Z_INDEX
             }}
           />
         )}

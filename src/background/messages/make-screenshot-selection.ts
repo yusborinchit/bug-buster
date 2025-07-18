@@ -7,7 +7,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const { body } = req;
   if (!body || typeof body !== "object") return res.send({ status: "error" });
 
-  const { x, y, width, height } = body;
+  const { x, y, width, height, sessionId } = body;
   if (
     typeof x !== "number" ||
     typeof y !== "number" ||
@@ -29,15 +29,14 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     height
   );
 
-  promiseDb.then((db) => {
+  promiseDb.then(async (db) => {
     db.add("screenshots", {
       id: crypto.randomUUID(),
+      sessionId,
       url: croppedScreenshot,
       createdAt: new Date().toISOString()
-    });
+    }).then(() => createNotificationBadge("!"));
   });
-
-  createNotificationBadge("!");
 
   return res.send({ status: "ok" });
 };

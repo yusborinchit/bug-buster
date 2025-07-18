@@ -1,42 +1,46 @@
-import { ChevronDown, Trash2 } from "lucide-react";
-import { useId } from "react";
+import { Trash2 } from "lucide-react";
+import type { FormEvent } from "react";
 import { useData, type Data } from "~/hooks/use-data";
+import { useRoute } from "~/hooks/use-route";
+import { FORM_TYPES } from "~/utils/const";
+import Select from "../ui/select";
 
 interface Props {
   data: Data[];
-  label: string;
+  form: (typeof FORM_TYPES)[number];
 }
 
-export default function DeleteDataForm({ data, label }: Readonly<Props>) {
-  const id = useId();
-
+export default function DeleteDataForm({ data, form }: Readonly<Props>) {
+  const { navigate, searchParams } = useRoute();
   const { deleteData } = useData();
 
-  function handleDeleteData(event: React.FormEvent<HTMLFormElement>) {
+  const { sessionId, type } = searchParams;
+  if (!sessionId || !type) navigate("/404");
+
+  const isDisabled = data.length === 0;
+
+  async function handleDeleteData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const id = formData.get("id");
+    const id = formData.get("bug-id");
     if (!id || typeof id !== "string") return;
 
-    deleteData(id);
+    await deleteData(id);
     form.reset();
   }
 
   return (
-    <form className="flex items-center" onSubmit={handleDeleteData}>
-      <label className="sr-only" htmlFor={id}>
-        {label} Name:
+    <form onSubmit={handleDeleteData} className="flex flex-col gap-2">
+      <label htmlFor="bug-id" className="flex gap-1 font-semibold">
+        <span className="text-[var(--color)]">#</span>
+        <span>Delete {form.label.singular}:</span>
       </label>
-      <div className="relative flex-1">
-        <select
-          className="w-full appearance-none rounded border border-neutral-300 px-4 py-2.5 text-sm hover:cursor-pointer disabled:opacity-50 disabled:hover:cursor-not-allowed"
-          disabled={data.length === 0}
-          id={id}
-          name="id">
-          {data.length > 0 ? (
+      <div className="flex w-full gap-2">
+        <Select id="bug-id" name="bug-id" isDisabled={isDisabled}>
+          {!isDisabled ? (
             data.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.message.substring(0, 32) +
@@ -44,18 +48,17 @@ export default function DeleteDataForm({ data, label }: Readonly<Props>) {
               </option>
             ))
           ) : (
-            <option value="null">No {label} added yet</option>
+            <option>No {form.label.plural} Added Yet</option>
           )}
-        </select>
-        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 z-30 size-5 -translate-y-1/2 text-neutral-500" />
+        </Select>
+        <button
+          type="submit"
+          disabled={isDisabled}
+          className="text-[var(--color)] disabled:cursor-not-allowed disabled:opacity-50">
+          <span className="sr-only">Delete {form.label.singular}</span>
+          <Trash2 className="size-6" />
+        </button>
       </div>
-      <button
-        aria-label="Delete"
-        className="p-2.5 text-[var(--data-color)] disabled:opacity-50 disabled:hover:cursor-not-allowed"
-        disabled={data.length === 0}
-        type="submit">
-        <Trash2 className="size-6" />
-      </button>
     </form>
   );
 }

@@ -50,10 +50,17 @@ export default function CreateDataForm({
   async function handleUploadScreenshot(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
 
-    await sendToBackground({
+    const { status } = await sendToBackground({
       name: "start-screenshot-selection",
       body: { sessionId }
     });
+
+    if (status === "error") {
+      alert(
+        "For security reasons, you can't upload screenshots from this tab (Or any other internal chrome tab)."
+      );
+      return;
+    }
 
     window.close();
   }

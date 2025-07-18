@@ -131,7 +131,7 @@ export default function ScreenshotSelector() {
           left: 0,
           width: "100vw",
           height: "100vh",
-          pointerEvents: "none",
+          pointerEvents: "auto",
           zIndex: ABSURD_HIGH_Z_INDEX,
           boxSizing: "border-box",
           border: "3px solid red"
@@ -143,7 +143,7 @@ export default function ScreenshotSelector() {
               top: currentRect.y,
               width: currentRect.width,
               height: currentRect.height,
-              pointerEvents: "none",
+              pointerEvents: "auto",
               position: "absolute",
               border: "1px solid #6491de",
               borderStyle: "dashed",

@@ -12,11 +12,15 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
   if (!tab?.id) return res.send({ status: "error" });
 
-  sendToContentScript({
-    tabId: tab.id,
-    name: "start-screenshot-selection",
-    body: { sessionId }
-  });
+  try {
+    await sendToContentScript({
+      tabId: tab.id,
+      name: "start-screenshot-selection",
+      body: { sessionId }
+    });
+  } catch (e) {
+    return res.send({ status: "error" });
+  }
 
   return res.send({ status: "ok" });
 };

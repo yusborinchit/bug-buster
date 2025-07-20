@@ -1,17 +1,18 @@
-import { Pin } from "lucide-react";
-import type { CSSProperties } from "react";
+import { sendToBackground } from "@plasmohq/messaging";
+import { ImageUp, Pin } from "lucide-react";
+import type { CSSProperties, MouseEvent } from "react";
 import { useRoute } from "~/hooks/use-route";
 import { useScreenshot } from "~/hooks/use-screenshot";
 import type { FORM_TYPES } from "~/utils/const";
 
 interface Props {
   form: (typeof FORM_TYPES)[number];
-  toggleModal: () => void;
+  closeModal: () => void;
 }
 
 export default function AttachScreenshotModal({
   form,
-  toggleModal
+  closeModal
 }: Readonly<Props>) {
   const { searchParams, navigate, setSearchParam } = useRoute();
   const { getScreenshotsBySessionId } = useScreenshot();
@@ -28,7 +29,25 @@ export default function AttachScreenshotModal({
   const isSelected = (id: string) => selectedIds.some((s) => s === id);
 
   function handleCloseModal() {
-    toggleModal();
+    closeModal();
+  }
+
+  async function handleUploadScreenshot(event: MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+
+    const { status } = await sendToBackground({
+      name: "start-screenshot-selection",
+      body: { sessionId }
+    });
+
+    if (status === "error") {
+      alert(
+        "For security reasons, you can't upload screenshots from this tab (Or any other internal chrome tab)."
+      );
+      return;
+    }
+
+    window.close();
   }
 
   function handleSelectScreenshot(id: string) {
@@ -51,13 +70,22 @@ export default function AttachScreenshotModal({
       <section
         onClick={(e) => e.stopPropagation()}
         className="absolute left-0 right-0 top-0 flex flex-col gap-6 bg-white p-6">
-        <header className="flex flex-col">
-          <p
-            onClick={handleCloseModal}
-            className="hover:cursor-pointer hover:underline">
-            Go Back
-          </p>
-          <h2 className="text-xl font-black">Attach Screenshots</h2>
+        <header className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <button
+              onClick={handleCloseModal}
+              className="w-fit hover:cursor-pointer hover:underline">
+              Go Back
+            </button>
+            <h2 className="text-xl font-black">Attach Screenshots</h2>
+          </div>
+          <button
+            type="button"
+            onClick={handleUploadScreenshot}
+            title="Upload Screenshot">
+            <span className="sr-only">Upload Screenshot</span>
+            <ImageUp className="size-6" />
+          </button>
         </header>
         <div className="grid grid-cols-4 gap-2">
           {screenshots.map((s) => (

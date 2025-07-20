@@ -43,8 +43,7 @@ export default function DeleteDataForm({ data, form }: Readonly<Props>) {
           {!isDisabled ? (
             data.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.message.substring(0, 32) +
-                  (d.message.length > 32 ? "..." : "")}
+                {d.title.substring(0, 32) + (d.title.length > 32 ? "..." : "")}
               </option>
             ))
           ) : (

@@ -29,7 +29,7 @@ export default function SessionPopup() {
     return () => navigate(`/form?sessionId=${sessionId}&type=${type}`);
   }
 
-  function handleGoToReport() {
+  function handleGoToDashboard() {
     chrome.tabs.create({ url: `/tabs/report.html?sessionId=${sessionId}` });
   }
 
@@ -38,15 +38,15 @@ export default function SessionPopup() {
       <section className="flex flex-col gap-6">
         <header className="flex items-center justify-between">
           <div className="flex flex-col">
-            <p
+            <button
               onClick={handleGoToHome}
-              className="hover:cursor-pointer hover:underline">
+              className="w-fit hover:cursor-pointer hover:underline">
               Go Back
-            </p>
+            </button>
             <h2 className="text-xl font-black">Session: {session.name}</h2>
           </div>
-          <button onClick={handleGoToReport} title="Generate Report">
-            <span className="sr-only">Generate Report</span>
+          <button onClick={handleGoToDashboard} title="Generate Report">
+            <span className="sr-only">Go to Dashboard</span>
             <ChartNoAxesCombined className="size-6" />
           </button>
         </header>

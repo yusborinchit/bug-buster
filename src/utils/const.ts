@@ -33,6 +33,12 @@ export const FORM_TYPES = [
   }
 ] as const;
 
+export const PRIORITY_COLORS = {
+  low: "#00a63e",
+  medium: "#fe9a00",
+  high: "#fb2c36"
+};
+
 export const NO_RELATED_TO_ANY_DATA = "no_related";
 
 export const ABSURD_HIGH_Z_INDEX = "9".repeat(25);

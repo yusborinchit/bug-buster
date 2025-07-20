@@ -1,4 +1,4 @@
-import { LogIn, Trash2 } from "lucide-react";
+import { Frown, LogIn, Trash2 } from "lucide-react";
 import type { MouseEvent } from "react";
 import { useRoute } from "~/hooks/use-route";
 import { useSession } from "~/hooks/use-session";
@@ -24,7 +24,7 @@ export default function SessionList() {
         <li
           key={session.id}
           onClick={handleLoginIntoSession(session.id)}
-          className="flex items-center rounded bg-zinc-200">
+          className="flex items-center rounded bg-zinc-100">
           <span className="px-4 py-3 text-base">{session.name}</span>
           <div className="ml-auto flex gap-2 px-4">
             <button
@@ -46,6 +46,9 @@ export default function SessionList() {
       ))}
     </ul>
   ) : (
-    <>There are no sessions yet.</>
+    <div className="mx-auto flex items-center gap-2 text-zinc-500">
+      <Frown className="size-6" />
+      <p className="font-semibold">Nothing to see here yet.</p>
+    </div>
   );
 }

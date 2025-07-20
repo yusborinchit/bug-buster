@@ -4,10 +4,12 @@ import { DataContext } from "~/contexts/data-context";
 export interface Data {
   id: string;
   sessionId: string;
-  screenshotsIds?: string[];
+  screenshotsIds: string[];
   type: "bug" | "note" | "question" | "idea";
+  title: string;
+  description?: string;
   related?: string;
-  message: string;
+  priority?: "low" | "medium" | "high";
   createdAt: string;
 }
 

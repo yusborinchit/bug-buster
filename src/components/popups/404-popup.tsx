@@ -10,11 +10,11 @@ export default function NotFoundPopup() {
 
   return (
     <PopupContainer>
-      <p
+      <button
         onClick={handleGoToHome}
         className="hover:cursor-pointer hover:underline">
         Go Back
-      </p>
+      </button>
       <h2 className="text-center text-3xl font-black underline decoration-red-600 decoration-4">
         404 Not Found
       </h2>

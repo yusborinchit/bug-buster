@@ -1,5 +1,4 @@
-import { sendToBackground } from "@plasmohq/messaging";
-import { ImagePlus, ImageUp, Send } from "lucide-react";
+import { ImagePlus, Send } from "lucide-react";
 import {
   useRef,
   type ChangeEvent,
@@ -15,13 +14,13 @@ import Select from "../ui/select";
 interface Props {
   data: Data[];
   form: (typeof FORM_TYPES)[number];
-  toggleModal: () => void;
+  openModal: () => void;
 }
 
 export default function CreateDataForm({
   data,
   form,
-  toggleModal
+  openModal
 }: Readonly<Props>) {
   const { navigate, searchParams, setSearchParam } = useRoute();
   const { createData } = useData();
@@ -31,7 +30,7 @@ export default function CreateDataForm({
   const {
     sessionId,
     type,
-    message,
+    title,
     screenshotsIds: screenshotsIdsString
   } = searchParams;
   if (!sessionId || !type) navigate("/404");
@@ -43,26 +42,8 @@ export default function CreateDataForm({
 
   function handleAttachScreenshot(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
-    toggleModal();
+    openModal();
     removeNotificationBadge();
-  }
-
-  async function handleUploadScreenshot(event: MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation();
-
-    const { status } = await sendToBackground({
-      name: "start-screenshot-selection",
-      body: { sessionId }
-    });
-
-    if (status === "error") {
-      alert(
-        "For security reasons, you can't upload screenshots from this tab (Or any other internal chrome tab)."
-      );
-      return;
-    }
-
-    window.close();
   }
 
   function handleFocusTextArea() {
@@ -71,7 +52,7 @@ export default function CreateDataForm({
   }
 
   function handleTextAreaChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    setSearchParam([{ key: "message", value: event.target.value }]);
+    setSearchParam([{ key: "title", value: event.target.value }]);
   }
 
   async function handleCreateData(event: FormEvent<HTMLFormElement>) {
@@ -80,24 +61,27 @@ export default function CreateDataForm({
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const message = formData.get("bug-message");
-    if (!message || typeof message !== "string") return;
+    const title = formData.get("data-title");
+    if (!title || typeof title !== "string") return;
 
-    const related = formData.get("bug-id");
+    const priority = formData.get("data-priority");
+
+    const related = formData.get("data-id");
     if (!related || typeof related !== "string") return;
 
     await createData({
       id: crypto.randomUUID(),
       sessionId,
       type: type as Data["type"],
-      message,
+      title,
       screenshotsIds,
       related: related === NO_RELATED_TO_ANY_DATA ? undefined : related,
+      priority: priority as Data["priority"],
       createdAt: new Date().toISOString()
     });
 
     setSearchParam([
-      { key: "message", value: "" },
+      { key: "title", value: "" },
       { key: "screenshotsIds", value: "" }
     ]);
 
@@ -106,17 +90,24 @@ export default function CreateDataForm({
 
   return (
     <form onSubmit={handleCreateData} className="flex flex-col gap-2">
-      <label htmlFor="bug-message" className="flex gap-1 font-semibold">
+      <label htmlFor="data-title" className="flex gap-1 font-semibold">
         <span className="text-[var(--color)]">#</span>
         <span>Create {form.label.singular}:</span>
       </label>
+      {form.type === "bug" && (
+        <Select id="data-priority" name="data-priority" title="Select Priority">
+          <option value="low">Low Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="high">High Priority</option>
+        </Select>
+      )}
       <div className="flex flex-col overflow-hidden rounded border border-zinc-500 focus-within:border-[var(--color)] focus-within:outline focus-within:outline-1 focus-within:outline-[var(--color)]">
         <textarea
-          id="bug-message"
-          name="bug-message"
+          id="data-title"
+          name="data-title"
           ref={textAreaRef}
           onChange={handleTextAreaChange}
-          defaultValue={message ?? ""}
+          defaultValue={title ?? ""}
           rows={3}
           placeholder={`Your ${form.label.singular} Here...`}
           className="resize-none px-4 py-3 placeholder:text-zinc-500 focus-visible:outline-none"></textarea>
@@ -134,28 +125,20 @@ export default function CreateDataForm({
             <span className="sr-only">Attach Screenshot</span>
             <ImagePlus className="size-6" />
           </button>
-          <button
-            type="button"
-            onClick={handleUploadScreenshot}
-            title="Upload Screenshot">
-            <span className="sr-only">Upload Screenshot</span>
-            <ImageUp className="size-6" />
-          </button>
           <button type="submit" title="Create">
             <span className="sr-only">Create {form.label.singular}</span>
             <Send className="size-6" />
           </button>
         </div>
       </div>
-      <Select id="bug-id" name="bug-id" title="Select Related">
+      <Select id="data-id" name="data-id" title="Select Related">
         <option value={NO_RELATED_TO_ANY_DATA}>
           No Related To Any {form.label.singular}
         </option>
         {data.length > 0 &&
           data.map((d) => (
             <option key={d.id} value={d.id}>
-              {d.message.substring(0, 32) +
-                (d.message.length > 32 ? "..." : "")}
+              {d.title.substring(0, 32) + (d.title.length > 32 ? "..." : "")}
             </option>
           ))}
       </Select>

@@ -10,6 +10,7 @@ export const SessionContext = createContext<
       setSessions: (sessions: Session[]) => void;
       createSession: (name: string) => void;
       deleteSession: (id: string) => void;
+      putSession: (session: Session) => void;
     }
   | undefined
 >(undefined);
@@ -55,6 +56,12 @@ export default function SessionProvider({ children }: Readonly<Props>) {
     setSessions((prev) => prev.filter((s) => s.id !== id));
   }
 
+  async function putSession(session: Session) {
+    if (!dbRef.current) return;
+    await dbRef.current.put("sessions", session);
+    setSessions((prev) => prev.map((s) => (s.id === session.id ? session : s)));
+  }
+
   return (
     <SessionContext.Provider
       value={{
@@ -62,7 +69,8 @@ export default function SessionProvider({ children }: Readonly<Props>) {
         getSessionById,
         createSession,
         deleteSession,
-        setSessions
+        setSessions,
+        putSession
       }}>
       {children}
     </SessionContext.Provider>

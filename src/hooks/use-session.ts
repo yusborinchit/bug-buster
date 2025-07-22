@@ -4,6 +4,8 @@ import { SessionContext } from "~/contexts/session-context";
 export interface Session {
   id: string;
   site: string;
+  objective?: string;
+  scope?: string;
   href: string;
   name: string;
   createdAt: string;

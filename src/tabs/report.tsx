@@ -1,7 +1,9 @@
 import "~/global.css";
 
-import { useMemo, type CSSProperties } from "react";
+import { useMemo } from "react";
 import DataCard from "~/components/cards/data-card";
+import ObjectiveAndScopeCard from "~/components/cards/objective-and-scope-card";
+import ReportSummaryTable from "~/components/tables/report-summary-table";
 import { DataProvider } from "~/contexts/data-context";
 import ScreenshotProvider from "~/contexts/screenshot-context";
 import SessionProvider from "~/contexts/session-context";
@@ -53,7 +55,9 @@ function Dashboard() {
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-24 p-6 font-geist text-base">
       <header className="flex flex-col gap-6">
-        <h1 className="text-3xl font-bold tracking-tight">Session Report</h1>
+        <h1 className="text-5xl font-bold leading-[1] tracking-tight">
+          Session Report
+        </h1>
         <ul className="pl-5">
           <li className="list-disc">
             <span className="underline">Name</span>: {session.name}
@@ -67,34 +71,12 @@ function Dashboard() {
           </li>
         </ul>
       </header>
-      <section className="flex flex-col gap-6">
-        <table className="w-full border-collapse">
-          <thead className="[&>*]:border [&>*]:border-black [&>*]:px-4 [&>*]:py-2">
-            <th className="text-start">Notation Type</th>
-            <th className="w-0">Total</th>
-          </thead>
-          <tbody>
-            {Object.entries(dataByType).map(([type, d]) => (
-              <tr
-                key={`$tr-{type}`}
-                className="[&>*]:border [&>*]:border-black [&>*]:px-4 [&>*]:py-2">
-                <td className="capitalize">
-                  {getFormByType(type).label.singular}
-                </td>
-                <td className="text-center">{d.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+      <ObjectiveAndScopeCard session={session} />
       {Object.entries(dataByType).map(
         ([type, d]) =>
           d.length > 0 && (
-            <section
-              key={`section-${type}`}
-              style={{ "--color": getFormByType(type).color } as CSSProperties}
-              className="flex flex-col">
-              <h2 className="text-2xl font-bold tracking-tight underline decoration-[var(--color)] decoration-4">
+            <section key={`section-${type}`} className="flex flex-col">
+              <h2 className="text-3xl font-bold leading-[1] tracking-tight">
                 {getFormByType(type).label.plural}
               </h2>
               <div className="divide-y divide-black">
@@ -105,6 +87,13 @@ function Dashboard() {
             </section>
           )
       )}
+      <section className="flex flex-col gap-6">
+        <h2 className="text-3xl font-bold leading-[1] tracking-tight">
+          Report Summary
+        </h2>
+        <p>During this session we have reported the next data:</p>
+        <ReportSummaryTable data={Object.entries(dataByType)} />
+      </section>
       <footer></footer>
     </main>
   );

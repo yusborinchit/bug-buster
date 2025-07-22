@@ -1,5 +1,11 @@
-import type { CSSProperties } from "react";
-import type { Data } from "~/hooks/use-data";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type CSSProperties
+} from "react";
+import { useData, type Data } from "~/hooks/use-data";
 import { useScreenshot } from "~/hooks/use-screenshot";
 import { PRIORITY_COLORS } from "~/utils/const";
 
@@ -8,9 +14,27 @@ interface Props {
 }
 
 export default function DataCard({ data }: Readonly<Props>) {
+  const { putData } = useData();
   const { getScreenshotsBySessionId } = useScreenshot();
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const screenshots = getScreenshotsBySessionId(data.sessionId);
+
+  const resizeTextArea = useCallback(() => {
+    if (!textAreaRef.current) return;
+    textAreaRef.current.style.height = "auto";
+    textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+  }, []);
+
+  useEffect(() => {
+    resizeTextArea();
+  }, [resizeTextArea]);
+
+  // TODO: Add some sort of debounce here
+  function handleDescriptionChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    putData({ ...data, description: e.target.value });
+    resizeTextArea();
+  }
 
   const getScreenshotById = (id: string) =>
     screenshots.find((s) => s.id === id);
@@ -47,10 +71,11 @@ export default function DataCard({ data }: Readonly<Props>) {
         </li>
       </ul>
       <textarea
+        ref={textAreaRef}
+        onChange={handleDescriptionChange}
         defaultValue={data.description}
         placeholder="Add some description here..."
-        rows={3}
-        className="rounded border border-zinc-500 px-4 py-3 placeholder:text-zinc-500"></textarea>
+        className="resize-none overflow-y-hidden rounded border border-zinc-500 px-4 py-3 placeholder:text-zinc-500 print:border-none print:p-0"></textarea>
       {data.screenshotsIds.length > 0 && (
         <>
           <div className="grid grid-cols-4 gap-2">

@@ -9,6 +9,7 @@ export const DataContext = createContext<
       getDataBySessionId: (sessionId: string) => Data[];
       createData: (newData: Data) => Promise<void>;
       deleteData: (id: string) => Promise<void>;
+      putData: (newData: Data) => Promise<void>;
     }
   | undefined
 >(undefined);
@@ -44,9 +45,22 @@ export function DataProvider({ children }: Readonly<Props>) {
     setData((prev) => prev.filter((d) => d.id !== id));
   }
 
+  async function putData(newData: Data) {
+    if (!dbRef.current) return;
+    await dbRef.current.put("data", newData);
+    setData((prev) => prev.map((d) => (d.id !== newData.id ? d : newData)));
+  }
+
   return (
     <DataContext.Provider
-      value={{ data, setData, getDataBySessionId, createData, deleteData }}>
+      value={{
+        data,
+        setData,
+        getDataBySessionId,
+        createData,
+        deleteData,
+        putData
+      }}>
       {children}
     </DataContext.Provider>
   );

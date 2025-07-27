@@ -1,6 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
+import { promiseDb, type DB } from "~/database";
 import type { Screenshot } from "~/hooks/use-screenshot";
-import { promiseDb, type DB } from "~/utils/database";
 
 export const ScreenshotContext = createContext<
   | {

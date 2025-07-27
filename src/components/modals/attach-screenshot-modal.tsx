@@ -1,9 +1,10 @@
 import { sendToBackground } from "@plasmohq/messaging";
-import { ImageUp, Pin } from "lucide-react";
+import { Frown, ImageUp, Pin } from "lucide-react";
 import type { CSSProperties, MouseEvent } from "react";
+import type { FORM_TYPES } from "~/const";
 import { useRoute } from "~/hooks/use-route";
 import { useScreenshot } from "~/hooks/use-screenshot";
-import type { FORM_TYPES } from "~/utils/const";
+import IconButton from "../ui/icon-button";
 
 interface Props {
   form: (typeof FORM_TYPES)[number];
@@ -79,33 +80,41 @@ export default function AttachScreenshotModal({
             </button>
             <h2 className="text-xl font-black">Attach Screenshots</h2>
           </div>
-          <button
+          <IconButton
             type="button"
             onClick={handleUploadScreenshot}
             title="Upload Screenshot">
-            <span className="sr-only">Upload Screenshot</span>
-            <ImageUp className="size-6" />
-          </button>
+            <ImageUp className="size-10" />
+          </IconButton>
         </header>
         <div className="grid grid-cols-4 gap-2">
-          {screenshots.map((s) => (
-            <picture
-              key={s.id}
-              style={{ "--url": `url('${s.url}')` } as CSSProperties}
-              onClick={handleSelectScreenshot(s.id)}
-              className="relative aspect-[2/3] rounded bg-cover [background:var(--url)] hover:cursor-pointer">
-              {isSelected(s.id) && (
-                <div className="absolute left-1 top-1 z-30 grid place-items-center rounded bg-[var(--color)] p-1 text-white">
-                  <Pin className="size-3" />
-                </div>
-              )}
-              <img
-                src={s.url}
-                alt={`Screenshot taken on ${s.createdAt}`}
-                className="absolute inset-0 aspect-[2/3] rounded bg-white/50 object-contain backdrop-blur-[2px]"
-              />
-            </picture>
-          ))}
+          {screenshots.length > 0 ? (
+            screenshots.map((s) => (
+              <picture
+                key={s.id}
+                style={{ "--url": `url('${s.url}')` } as CSSProperties}
+                onClick={handleSelectScreenshot(s.id)}
+                className="relative aspect-[2/3] rounded bg-cover [background:var(--url)] hover:cursor-pointer">
+                {isSelected(s.id) && (
+                  <div className="absolute left-1 top-1 z-30 grid place-items-center rounded bg-[var(--color)] p-1 text-white">
+                    <Pin className="size-3" />
+                  </div>
+                )}
+                <img
+                  src={s.url}
+                  alt={`Screenshot taken on ${s.createdAt}`}
+                  className="absolute inset-0 aspect-[2/3] w-full rounded bg-black/50 object-contain backdrop-blur-[2px]"
+                />
+              </picture>
+            ))
+          ) : (
+            <div className="col-span-4 flex items-center gap-2 text-zinc-500">
+              <Frown className="size-6 shrink-0" />
+              <p className="font-semibold">
+                Upload some screenshots with the top-right button.
+              </p>
+            </div>
+          )}
         </div>
         <button
           onClick={handleCloseModal}

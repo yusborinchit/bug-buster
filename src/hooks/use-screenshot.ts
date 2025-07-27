@@ -5,6 +5,8 @@ export interface Screenshot {
   id: string;
   sessionId: string;
   url: string;
+  width: number;
+  height: number;
   createdAt: string;
 }
 

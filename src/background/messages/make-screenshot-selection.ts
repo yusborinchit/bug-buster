@@ -1,6 +1,6 @@
 import { type PlasmoMessaging } from "@plasmohq/messaging";
+import { promiseDb } from "~/database";
 import { cropScreenshot } from "~/utils/crop-screenshot";
-import { promiseDb } from "~/utils/database";
 import { createNotificationBadge } from "~/utils/notification-badge";
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
@@ -34,6 +34,8 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
       id: crypto.randomUUID(),
       sessionId,
       url: croppedScreenshot,
+      width,
+      height,
       createdAt: new Date().toISOString()
     }).then(() => createNotificationBadge("!"));
   });

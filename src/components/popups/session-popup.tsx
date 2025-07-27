@@ -1,23 +1,26 @@
-import { ArrowRight, ChartNoAxesCombined } from "lucide-react";
+import { Packer } from "docx";
+import { ArrowRight } from "lucide-react";
 import type { CSSProperties } from "react";
-import { useData, type Data } from "~/hooks/use-data";
+import { FORM_TYPES } from "~/const";
+import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
+import { useScreenshot } from "~/hooks/use-screenshot";
 import { useSession } from "~/hooks/use-session";
-import { FORM_TYPES } from "~/utils/const";
+import { createReportDoc } from "~/utils/docx";
 import PopupContainer from "../containers/popup-container";
+import IconButton from "../ui/icon-button";
 
 export default function SessionPopup() {
   const { navigate, searchParams } = useRoute();
   const { getSessionById } = useSession();
-  const { getDataBySessionId } = useData();
+  const { getNotationsBySessionId } = useNotation();
+  const { getScreenshotsBySessionId } = useScreenshot();
 
   const { sessionId } = searchParams;
 
   const session = getSessionById(sessionId);
-  const allData = getDataBySessionId(sessionId);
-
-  const getDataLength = (type: Data["type"]) =>
-    allData.filter((d) => d.type === type).length;
+  const notations = getNotationsBySessionId(sessionId);
+  const screenshots = getScreenshotsBySessionId(sessionId);
 
   if (!session) navigate("/404");
 
@@ -25,18 +28,24 @@ export default function SessionPopup() {
     navigate("/home");
   }
 
-  function handleGoToForm(type: Data["type"]) {
+  function handleGoToForm(type: Notation["type"]) {
     return () => navigate(`/form?sessionId=${sessionId}&type=${type}`);
   }
 
-  function handleGoToDashboard() {
-    chrome.tabs.create({ url: `/tabs/report.html?sessionId=${sessionId}` });
+  function handleDownloadReport() {
+    const doc = createReportDoc(notations, screenshots);
+    Packer.toBlob(doc).then((buffer) => {
+      chrome.downloads.download({ url: URL.createObjectURL(buffer) });
+    });
   }
+
+  const getNotationsLength = (type: Notation["type"]) =>
+    notations.filter((d) => d.type === type).length;
 
   return (
     <PopupContainer>
       <section className="flex flex-col gap-6">
-        <header className="flex items-center justify-between">
+        <header className="flex items-end justify-between">
           <div className="flex flex-col">
             <button
               onClick={handleGoToHome}
@@ -45,10 +54,6 @@ export default function SessionPopup() {
             </button>
             <h2 className="text-xl font-black">Session: {session.name}</h2>
           </div>
-          <button onClick={handleGoToDashboard} title="Generate Report">
-            <span className="sr-only">Go to Dashboard</span>
-            <ChartNoAxesCombined className="size-6" />
-          </button>
         </header>
         <ul className="flex flex-col gap-2 text-base text-white">
           {FORM_TYPES.map((form) => (
@@ -57,19 +62,28 @@ export default function SessionPopup() {
               style={{ "--color": form.color } as CSSProperties}
               className="flex items-center justify-between rounded bg-[var(--color)]">
               <span className="px-4 py-3 font-medium">
-                {getDataLength(form.type)} {form.label.plural}
+                {getNotationsLength(form.type)} {form.label.plural}
               </span>
-              <button
+              <IconButton
+                type="button"
                 onClick={handleGoToForm(form.type)}
                 title="Enter Form"
                 className="px-4 py-3">
-                <span className="sr-only">Add {form.label.singular}</span>
                 <ArrowRight className="size-6" />
-              </button>
+              </IconButton>
             </li>
           ))}
         </ul>
       </section>
+      <footer className="flex">
+        <button
+          type="button"
+          onClick={handleDownloadReport}
+          title="Download Report"
+          className="hover:underline">
+          Generate Report
+        </button>
+      </footer>
     </PopupContainer>
   );
 }

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react";
-import { promiseDb, type DB } from "~/utils/database";
+import { promiseDb, type DB } from "~/database";
 
 export const RouteContext = createContext<
   | {

@@ -1,11 +1,11 @@
 import { openDB, type IDBPDatabase } from "idb";
-import type { Data } from "~/hooks/use-data";
+import type { Notation } from "~/hooks/use-notation";
 import type { Screenshot } from "~/hooks/use-screenshot";
 import type { Session } from "~/hooks/use-session";
 
 interface DBSchema {
   sessions: Session;
-  data: Data;
+  notations: Notation;
   route: {
     id: "route";
     path: string;
@@ -16,7 +16,7 @@ interface DBSchema {
 export const promiseDb = openDB<DBSchema>("snap-test", 1, {
   upgrade(db) {
     db.createObjectStore("sessions", { keyPath: "id" });
-    db.createObjectStore("data", { keyPath: "id" });
+    db.createObjectStore("notations", { keyPath: "id" });
     db.createObjectStore("route", { keyPath: "id" });
     db.createObjectStore("screenshots", { keyPath: "id" });
   }

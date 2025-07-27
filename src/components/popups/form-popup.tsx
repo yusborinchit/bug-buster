@@ -1,29 +1,30 @@
 import { ArrowLeft } from "lucide-react";
 import { type CSSProperties } from "react";
-import { useData } from "~/hooks/use-data";
+import { FORM_TYPES } from "~/const";
+import { useNotation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
 import { useSession } from "~/hooks/use-session";
-import { FORM_TYPES } from "~/utils/const";
 import PopupContainer from "../containers/popup-container";
-import CreateDataForm from "../forms/create-data-form";
-import DeleteDataForm from "../forms/delete-data-form";
+import CreateNotationForm from "../forms/create-notation-form";
+import DeleteNotationForm from "../forms/delete-notation-form";
 import AttachScreenshotModal from "../modals/attach-screenshot-modal";
+import IconButton from "../ui/icon-button";
 
 export default function FormPopup() {
   const { navigate, searchParams, setSearchParam } = useRoute();
   const { getSessionById } = useSession();
-  const { getDataBySessionId } = useData();
+  const { getNotationsBySessionId } = useNotation();
 
   const { sessionId, type, modal } = searchParams;
   if (!sessionId || !type) navigate("/404");
 
   const session = getSessionById(sessionId);
-  const sessionData = getDataBySessionId(sessionId);
+  const notations = getNotationsBySessionId(sessionId);
 
   if (!session) navigate("/404");
 
   const form = FORM_TYPES.find((f) => f.type === type);
-  const data = sessionData.filter((d) => d.type === type);
+  const notationsByFormType = notations.filter((d) => d.type === type);
 
   function handleGoToSession() {
     navigate(`/session?sessionId=${sessionId}`);
@@ -52,19 +53,22 @@ export default function FormPopup() {
         </header>
         <div className="flex items-center justify-between rounded bg-[var(--color)] text-white">
           <h3 className="px-4 py-3 text-base font-medium">
-            {data.length} {form.label.plural}
+            {notationsByFormType.length} {form.label.plural}
           </h3>
-          <button
+          <IconButton
             type="button"
             onClick={handleGoToSession}
             title="Exit Form"
             className="px-4 py-3 text-white">
-            <span className="sr-only">Go Back</span>
             <ArrowLeft className="size-6" />
-          </button>
+          </IconButton>
         </div>
-        <CreateDataForm form={form} data={data} openModal={handleOpenModal} />
-        <DeleteDataForm form={form} data={data} />
+        <CreateNotationForm
+          form={form}
+          notations={notationsByFormType}
+          openModal={handleOpenModal}
+        />
+        <DeleteNotationForm form={form} notations={notationsByFormType} />
       </section>
       {modal === "screenshot" && (
         <AttachScreenshotModal form={form} closeModal={handleCloseModal} />

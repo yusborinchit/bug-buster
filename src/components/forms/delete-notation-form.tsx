@@ -1,63 +1,66 @@
 import { Trash2 } from "lucide-react";
 import type { FormEvent } from "react";
-import { useData, type Data } from "~/hooks/use-data";
+import { FORM_TYPES } from "~/const";
+import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
-import { FORM_TYPES } from "~/utils/const";
+import IconButton from "../ui/icon-button";
 import Select from "../ui/select";
 
 interface Props {
-  data: Data[];
+  notations: Notation[];
   form: (typeof FORM_TYPES)[number];
 }
 
-export default function DeleteDataForm({ data, form }: Readonly<Props>) {
+export default function DeleteNotationForm({
+  notations,
+  form
+}: Readonly<Props>) {
   const { navigate, searchParams } = useRoute();
-  const { deleteData } = useData();
+  const { deleteNotation } = useNotation();
 
   const { sessionId, type } = searchParams;
   if (!sessionId || !type) navigate("/404");
 
-  const isDisabled = data.length === 0;
+  const isDisabled = notations.length === 0;
 
-  async function handleDeleteData(event: FormEvent<HTMLFormElement>) {
+  async function handleDeleteNotation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const id = formData.get("bug-id");
+    const id = formData.get("notation-id");
     if (!id || typeof id !== "string") return;
 
-    await deleteData(id);
+    await deleteNotation(id);
     form.reset();
   }
 
   return (
-    <form onSubmit={handleDeleteData} className="flex flex-col gap-2">
-      <label htmlFor="bug-id" className="flex gap-1 font-semibold">
+    <form onSubmit={handleDeleteNotation} className="flex flex-col gap-2">
+      <label htmlFor="notation-id" className="flex gap-1 font-semibold">
         <span className="text-[var(--color)]">#</span>
         <span>Delete {form.label.singular}:</span>
       </label>
       <div className="flex w-full gap-2">
-        <Select id="bug-id" name="bug-id" isDisabled={isDisabled}>
+        <Select id="notation-id" name="notation-id" isDisabled={isDisabled}>
           {!isDisabled ? (
-            data.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.title.substring(0, 32) + (d.title.length > 32 ? "..." : "")}
+            notations.map((n) => (
+              <option key={n.id} value={n.id}>
+                {n.title.substring(0, 32) + (n.title.length > 32 ? "..." : "")}
               </option>
             ))
           ) : (
             <option>No {form.label.plural} Added Yet</option>
           )}
         </Select>
-        <button
+        <IconButton
           type="submit"
           disabled={isDisabled}
           title="Delete"
           className="text-[var(--color)] disabled:cursor-not-allowed disabled:opacity-50">
-          <span className="sr-only">Delete {form.label.singular}</span>
           <Trash2 className="size-6" />
-        </button>
+        </IconButton>
       </div>
     </form>
   );

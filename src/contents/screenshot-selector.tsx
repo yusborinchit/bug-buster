@@ -1,7 +1,7 @@
 import { sendToBackground } from "@plasmohq/messaging";
 import { useMessage } from "@plasmohq/messaging/hook";
 import { useCallback, useEffect, useState } from "react";
-import { ABSURD_HIGH_Z_INDEX } from "~/utils/const";
+import { ABSURD_HIGH_Z_INDEX } from "~/const";
 
 interface Coords {
   x: number;

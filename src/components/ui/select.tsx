@@ -27,7 +27,7 @@ export default function Select({
         className="flex-1 appearance-none rounded px-4 py-3 focus-visible:outline-none disabled:cursor-not-allowed">
         {children}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 group-focus-within:text-[var(--color)]" />
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 h-full -translate-y-1/2 bg-white group-focus-within:text-[var(--color)]" />
     </div>
   );
 }

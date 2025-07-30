@@ -1,13 +1,14 @@
 import { Plus } from "lucide-react";
 import type { FormEvent } from "react";
 import { useSession } from "~/hooks/use-session";
+import { getActiveSiteUrl } from "~/utils/get-active-site-url";
 import IconButton from "../ui/icon-button";
 import { Input } from "../ui/input";
 
 export default function CreateSessionForm() {
   const { createSession } = useSession();
 
-  function handleCreateSession(event: FormEvent<HTMLFormElement>) {
+  async function handleCreateSession(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -16,7 +17,15 @@ export default function CreateSessionForm() {
     const name = formData.get("session-name");
     if (!name || typeof name !== "string") return;
 
-    createSession(name);
+    const url = await getActiveSiteUrl();
+    createSession({
+      id: crypto.randomUUID(),
+      name,
+      site: url.hostname,
+      href: url.href,
+      createdAt: new Date().toISOString()
+    });
+
     form.reset();
   }
 

@@ -17,7 +17,7 @@ export function useImport() {
     ]);
 
     await Promise.all([
-      ...data.sessions.map((s: Session) => createSession("NO NEEDED", s)),
+      ...data.sessions.map((s: Session) => createSession(s)),
       ...data.notations.map((n: Notation) => createNotation(n)),
       ...data.screenshots.map((s: Screenshot) => createScreenshot(s))
     ]);

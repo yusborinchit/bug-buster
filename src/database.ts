@@ -13,13 +13,14 @@ interface DBSchema {
   screenshots: Screenshot;
 }
 
-export const promiseDb = openDB<DBSchema>("snap-test", 1, {
-  upgrade(db) {
-    db.createObjectStore("sessions", { keyPath: "id" });
-    db.createObjectStore("notations", { keyPath: "id" });
-    db.createObjectStore("route", { keyPath: "id" });
-    db.createObjectStore("screenshots", { keyPath: "id" });
-  }
-});
+export const getDatabase = () =>
+  openDB<DBSchema>("bug-buster", 1, {
+    upgrade(db) {
+      db.createObjectStore("sessions", { keyPath: "id" });
+      db.createObjectStore("notations", { keyPath: "id" });
+      db.createObjectStore("route", { keyPath: "id" });
+      db.createObjectStore("screenshots", { keyPath: "id" });
+    }
+  });
 
 export type DB = IDBPDatabase<DBSchema>;

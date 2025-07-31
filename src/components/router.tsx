@@ -10,16 +10,16 @@ interface Props {
 }
 
 export default function Router({ routes }: Props) {
-  const { route: currentRoute } = useRoute();
+  const { route: path } = useRoute();
 
-  const exactMatch = routes.find((r) => r.path === currentRoute);
+  const exactMatch = routes.find((r) => r.path === path);
   if (exactMatch) {
     const Component = exactMatch.component;
     return <Component />;
   }
 
   for (const route of routes) {
-    if (currentRoute.startsWith(route.path)) {
+    if (path.startsWith(route.path)) {
       const Component = route.component;
       return <Component />;
     }

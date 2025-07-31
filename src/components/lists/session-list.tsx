@@ -14,8 +14,8 @@ export default function SessionList() {
       ))}
     </ul>
   ) : (
-    <div className="mx-auto flex items-center gap-2 text-zinc-500">
-      <Frown className="size-6" />
+    <div className="flex items-center gap-2 text-zinc-500">
+      <Frown className="size-6 shrink-0" />
       <p className="font-semibold">{t("home.emptySessions")}</p>
     </div>
   );

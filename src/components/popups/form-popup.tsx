@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import { type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import { FORM_TYPES } from "~/const";
-import { useNotation } from "~/hooks/use-notation";
+import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
 import { useSession } from "~/hooks/use-session";
 import PopupContainer from "../containers/popup-container";
@@ -13,11 +13,14 @@ import IconButton from "../ui/icon-button";
 
 export default function FormPopup() {
   const { t } = useTranslation();
-  const { navigate, searchParams, setSearchParam } = useRoute();
+  const { navigate, getSearchParam, setSearchParam } = useRoute();
   const { getSessionById } = useSession();
   const { getNotationsBySessionId } = useNotation();
 
-  const { sessionId, type, modal } = searchParams;
+  const sessionId = getSearchParam("sessionId", "");
+  const type = getSearchParam<Notation["type"]>("type", "bug");
+  const modal = getSearchParam("modal", "");
+
   if (!sessionId || !type) navigate("/404");
 
   const session = getSessionById(sessionId);
@@ -70,7 +73,7 @@ export default function FormPopup() {
         <CreateNotationForm openModal={handleOpenModal} />
         <DeleteNotationForm notations={filteredNotations} form={form} />
       </section>
-      {modal === "screenshot" && (
+      {modal && (
         <AttachScreenshotModal form={form} closeModal={handleCloseModal} />
       )}
     </PopupContainer>

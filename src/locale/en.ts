@@ -23,7 +23,8 @@ export default {
       importData: "Import Data",
       enterSession: "Enter Session",
       deleteSession: "Delete Session",
-      emptySessions: "Nothing to see here yet.",
+      emptySessions:
+        "Nothing to see here yet, create a session to get started.",
       sessionNamePlaceholder: "Your session name here...",
       createSession: "Create Session"
     },

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useRef, useState } from "react";
-import { promiseDb, type DB } from "~/database";
+import { getDatabase, type DB } from "~/database";
 import type { Screenshot } from "~/hooks/use-screenshot";
 
 export const ScreenshotContext = createContext<
@@ -22,7 +22,7 @@ export default function ScreenshotProvider({ children }: Readonly<Props>) {
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
 
   useEffect(() => {
-    promiseDb.then((db) => {
+    getDatabase().then((db) => {
       dbRef.current = db;
       db.getAll("screenshots").then((screenshots) => {
         setScreenshots(

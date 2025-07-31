@@ -23,7 +23,8 @@ export default {
       importData: "Importar Datos",
       enterSession: "Entrar a la Sesión",
       deleteSession: "Eliminar Sesión",
-      emptySessions: "Todavía no hay nada para ver.",
+      emptySessions:
+        "Todavía no hay nada para ver, crea una sesión para comenzar.",
       sessionNamePlaceholder: "Nombre de tu Sesión...",
       createSession: "Crear Sesión"
     },

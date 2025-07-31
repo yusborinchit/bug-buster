@@ -1,5 +1,5 @@
 import { type PlasmoMessaging } from "@plasmohq/messaging";
-import { promiseDb } from "~/database";
+import { getDatabase } from "~/database";
 import { cropScreenshot } from "~/utils/crop-screenshot";
 import { createNotificationBadge } from "~/utils/notification-badge";
 
@@ -16,28 +16,30 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   )
     return res.send({ status: "error" });
 
-  const screenshot = await chrome.tabs.captureVisibleTab(null, {
-    format: "jpeg",
-    quality: 100
-  });
+  getDatabase().then(async (db) => {
+    const screenshot = await chrome.tabs.captureVisibleTab(null, {
+      format: "jpeg",
+      quality: 100
+    });
 
-  const croppedScreenshot = await cropScreenshot(
-    screenshot,
-    x,
-    y,
-    width,
-    height
-  );
+    const croppedScreenshot = await cropScreenshot(
+      screenshot,
+      x,
+      y,
+      width,
+      height
+    );
 
-  promiseDb.then(async (db) => {
-    db.add("screenshots", {
+    await db.add("screenshots", {
       id: crypto.randomUUID(),
       sessionId,
       url: croppedScreenshot,
       width,
       height,
       createdAt: new Date().toISOString()
-    }).then(() => createNotificationBadge("!"));
+    });
+
+    createNotificationBadge("!");
   });
 
   return res.send({ status: "ok" });

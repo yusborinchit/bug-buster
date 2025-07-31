@@ -10,12 +10,14 @@ import FormList from "../lists/form-list";
 
 export default function SessionPopup() {
   const { t } = useTranslation();
-  const { navigate, searchParams } = useRoute();
+  const { navigate, getSearchParam } = useRoute();
   const { getSessionById } = useSession();
   const { getNotationsBySessionId } = useNotation();
   const { getScreenshotsBySessionId } = useScreenshot();
 
-  const { sessionId } = searchParams;
+  const sessionId = getSearchParam("sessionId", "");
+
+  if (!sessionId) navigate("/404");
 
   const session = getSessionById(sessionId);
   const notations = getNotationsBySessionId(sessionId);

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useRef, useState } from "react";
-import { promiseDb, type DB } from "~/database";
+import { getDatabase, type DB } from "~/database";
 import type { Notation } from "~/hooks/use-notation";
 
 export const NotationContext = createContext<
@@ -23,7 +23,7 @@ export function NotationProvider({ children }: Readonly<Props>) {
   const [notations, setNotations] = useState<Notation[]>([]);
 
   useEffect(() => {
-    promiseDb.then((db) => {
+    getDatabase().then((db) => {
       dbRef.current = db;
       db.getAll("notations").then(setNotations);
     });

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useRef, useState } from "react";
-import { promiseDb, type DB } from "~/database";
+import { getDatabase, type DB } from "~/database";
 import type { Session } from "~/hooks/use-session";
 
 export const SessionContext = createContext<
@@ -23,7 +23,7 @@ export default function SessionProvider({ children }: Readonly<Props>) {
   const [sessions, setSessions] = useState<Session[]>([]);
 
   useEffect(() => {
-    promiseDb.then((db) => {
+    getDatabase().then((db) => {
       dbRef.current = db;
       db.getAll("sessions").then(setSessions);
     });

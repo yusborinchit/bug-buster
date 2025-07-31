@@ -17,17 +17,16 @@ export default function AttachScreenshotModal({
   closeModal
 }: Readonly<Props>) {
   const { t } = useTranslation();
-  const { searchParams, navigate, setSearchParam } = useRoute();
+  const { navigate, getSearchParam, setSearchParam } = useRoute();
   const { getScreenshotsBySessionId } = useScreenshot();
 
-  const { sessionId, screenshotsIds: selectedIdsString } = searchParams;
+  const sessionId = getSearchParam("sessionId", "");
+  const selectedIdsString = getSearchParam("screenshotsIds", "");
+
   if (!sessionId || typeof sessionId !== "string") navigate("/404");
 
   const screenshots = getScreenshotsBySessionId(sessionId).slice(0, 8);
-  const selectedIds =
-    selectedIdsString && selectedIdsString !== ""
-      ? selectedIdsString.split(",")
-      : [];
+  const selectedIds = selectedIdsString.split(",").filter((s) => s !== "");
 
   const isSelected = (id: string) => selectedIds.some((s) => s === id);
 

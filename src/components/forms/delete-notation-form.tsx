@@ -17,10 +17,12 @@ export default function DeleteNotationForm({
   form
 }: Readonly<Props>) {
   const { t } = useTranslation();
-  const { navigate, searchParams } = useRoute();
+  const { navigate, getSearchParam } = useRoute();
   const { deleteNotation } = useNotation();
 
-  const { sessionId, type } = searchParams;
+  const sessionId = getSearchParam("sessionId", "");
+  const type = getSearchParam<Notation["type"]>("type", "bug");
+
   if (!sessionId || !type) navigate("/404");
 
   const isDisabled = notations.length === 0;

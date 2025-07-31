@@ -14,21 +14,19 @@ interface Props {
 
 export default function CreateNotationForm({ openModal }: Readonly<Props>) {
   const { t } = useTranslation();
-  const { navigate, searchParams, setSearchParam } = useRoute();
+  const { navigate, getSearchParam, setSearchParam } = useRoute();
   const { createNotation } = useNotation();
 
-  const {
-    sessionId,
-    type,
-    title,
-    screenshotsIds: screenshotsIdsString
-  } = searchParams;
+  const sessionId = getSearchParam("sessionId", "");
+  const type = getSearchParam<Notation["type"]>("type", "bug");
+  const title = getSearchParam("title", "");
+  const screenshotsIdsString = getSearchParam("screenshotsIds", "");
+
   if (!sessionId || !type) navigate("/404");
 
-  const screenshotsIds =
-    screenshotsIdsString && screenshotsIdsString !== ""
-      ? screenshotsIdsString.split(",")
-      : [];
+  const screenshotsIds = screenshotsIdsString
+    .split(",")
+    .filter((s) => s !== "");
 
   function handleAttachScreenshot(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
@@ -55,11 +53,11 @@ export default function CreateNotationForm({ openModal }: Readonly<Props>) {
     await createNotation({
       id: crypto.randomUUID(),
       sessionId,
-      type: type as Notation["type"],
+      type,
       title,
       screenshotsIds,
-      priority: priority,
-      severity: severity,
+      priority,
+      severity,
       createdAt: new Date().toISOString()
     });
 

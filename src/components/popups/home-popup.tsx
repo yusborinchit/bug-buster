@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useExport } from "~/hooks/use-export";
 import { useImport } from "~/hooks/use-import";
 import PopupContainer from "../containers/popup-container";
@@ -6,6 +7,7 @@ import CreateSessionForm from "../forms/create-session-form";
 import SessionList from "../lists/session-list";
 
 export default function HomePopup() {
+  const { t } = useTranslation();
   const { exportDataAsJSON } = useExport();
   const { importDataFromJSON } = useImport();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -36,9 +38,9 @@ export default function HomePopup() {
     <PopupContainer>
       <section className="flex flex-col gap-6">
         <header className="flex flex-col">
-          <p>Welcome to Bug Buster!</p>
+          <p>{t("home.welcome")}</p>
           <h2 className="text-3xl font-black underline decoration-red-600 decoration-4">
-            Manage Sessions
+            {t("home.title")}
           </h2>
         </header>
         <SessionList />
@@ -47,16 +49,16 @@ export default function HomePopup() {
           <button
             type="button"
             onClick={handleExportData}
-            title="Export Data"
+            title={t("home.exportData")}
             className="hover:underline">
-            Export Data
+            {t("home.exportData")}
           </button>
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            title="Import Data"
+            title={t("home.importData")}
             className="hover:underline">
-            Import Data
+            {t("home.importData")}
           </button>
           <input
             ref={inputRef}

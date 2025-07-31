@@ -1,5 +1,6 @@
 import { Trash2 } from "lucide-react";
 import type { FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { FORM_TYPES } from "~/const";
 import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
@@ -15,6 +16,7 @@ export default function DeleteNotationForm({
   notations,
   form
 }: Readonly<Props>) {
+  const { t } = useTranslation();
   const { navigate, searchParams } = useRoute();
   const { deleteNotation } = useNotation();
 
@@ -40,10 +42,16 @@ export default function DeleteNotationForm({
     <form onSubmit={handleDeleteNotation} className="flex flex-col gap-2">
       <label htmlFor="notation-id" className="flex gap-1 font-semibold">
         <span className="text-[var(--color)]">#</span>
-        <span>Delete {form.label.singular}:</span>
+        <span>
+          {t("form.deleteNotationLabel", { type: t(`${type}.singular`) })}
+        </span>
       </label>
       <div className="flex w-full gap-2">
-        <Select id="notation-id" name="notation-id" isDisabled={isDisabled}>
+        <Select
+          id="notation-id"
+          name="notation-id"
+          title={t("form.selectNotation", { type: t(`${type}.singular`) })}
+          isDisabled={isDisabled}>
           {!isDisabled ? (
             notations.map((n) => (
               <option key={n.id} value={n.id}>
@@ -51,13 +59,15 @@ export default function DeleteNotationForm({
               </option>
             ))
           ) : (
-            <option>No {form.label.plural} Added Yet</option>
+            <option>
+              {t("form.emptyNotations", { type: t(`${type}.plural`) })}
+            </option>
           )}
         </Select>
         <IconButton
           type="submit"
           disabled={isDisabled}
-          title="Delete"
+          title={t("form.deleteNotation", { type: t(`${type}.singular`) })}
           className="text-[var(--color)] disabled:cursor-not-allowed disabled:opacity-50">
           <Trash2 className="size-6" />
         </IconButton>

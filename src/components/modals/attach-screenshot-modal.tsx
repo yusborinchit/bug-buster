@@ -1,6 +1,7 @@
 import { sendToBackground } from "@plasmohq/messaging";
 import { Frown, ImageUp, Pin } from "lucide-react";
 import type { CSSProperties, MouseEvent } from "react";
+import { useTranslation } from "react-i18next";
 import type { FORM_TYPES } from "~/const";
 import { useRoute } from "~/hooks/use-route";
 import { useScreenshot } from "~/hooks/use-screenshot";
@@ -15,6 +16,7 @@ export default function AttachScreenshotModal({
   form,
   closeModal
 }: Readonly<Props>) {
+  const { t } = useTranslation();
   const { searchParams, navigate, setSearchParam } = useRoute();
   const { getScreenshotsBySessionId } = useScreenshot();
 
@@ -42,9 +44,7 @@ export default function AttachScreenshotModal({
     });
 
     if (status === "error") {
-      alert(
-        "For security reasons, you can't upload screenshots from this tab (Or any other internal chrome tab)."
-      );
+      alert(t("modal.uploadError"));
       return;
     }
 
@@ -76,14 +76,14 @@ export default function AttachScreenshotModal({
             <button
               onClick={handleCloseModal}
               className="w-fit hover:cursor-pointer hover:underline">
-              Go Back
+              {t("modal.goBack")}
             </button>
-            <h2 className="text-xl font-black">Attach Screenshots</h2>
+            <h2 className="text-xl font-black">{t("modal.title")}</h2>
           </div>
           <IconButton
             type="button"
             onClick={handleUploadScreenshot}
-            title="Upload Screenshot">
+            title={t("modal.uploadScreenshot")}>
             <ImageUp className="size-10" />
           </IconButton>
         </header>
@@ -102,7 +102,7 @@ export default function AttachScreenshotModal({
                 )}
                 <img
                   src={s.url}
-                  alt={`Screenshot taken on ${s.createdAt}`}
+                  alt={t("modal.screenshotAlt")}
                   className="absolute inset-0 aspect-[2/3] w-full rounded bg-black/50 object-contain backdrop-blur-[2px]"
                 />
               </picture>
@@ -110,16 +110,14 @@ export default function AttachScreenshotModal({
           ) : (
             <div className="col-span-4 flex items-center gap-2 text-zinc-500">
               <Frown className="size-6 shrink-0" />
-              <p className="font-semibold">
-                Upload some screenshots with the top-right button.
-              </p>
+              <p className="font-semibold">{t("modal.emptyScreenshots")}</p>
             </div>
           )}
         </div>
         <button
           onClick={handleCloseModal}
           className="rounded bg-[var(--color)] px-4 py-3 text-base font-semibold text-white">
-          Attach {selectedIds.length} Screenshots
+          {t("modal.attachScreenshots", { count: selectedIds.length })}
         </button>
       </section>
     </div>

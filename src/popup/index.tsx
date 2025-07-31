@@ -1,4 +1,5 @@
 import "~/global.css";
+import "~/i18n";
 
 import NotFoundPopup from "~/components/popups/404-popup";
 import FormPopup from "~/components/popups/form-popup";
@@ -18,22 +19,10 @@ export default function IndexPopup() {
           <ScreenshotProvider>
             <Router
               routes={[
-                {
-                  path: "/home",
-                  component: HomePopup
-                },
-                {
-                  path: "/session",
-                  component: SessionPopup
-                },
-                {
-                  path: "/form",
-                  component: FormPopup
-                },
-                {
-                  path: "/404",
-                  component: NotFoundPopup
-                }
+                { path: "/home", component: HomePopup },
+                { path: "/session", component: SessionPopup },
+                { path: "/form", component: FormPopup },
+                { path: "/404", component: NotFoundPopup }
               ]}
             />
           </ScreenshotProvider>

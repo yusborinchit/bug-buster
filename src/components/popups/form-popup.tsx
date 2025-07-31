@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { type CSSProperties } from "react";
+import { useTranslation } from "react-i18next";
 import { FORM_TYPES } from "~/const";
 import { useNotation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
@@ -11,6 +12,7 @@ import AttachScreenshotModal from "../modals/attach-screenshot-modal";
 import IconButton from "../ui/icon-button";
 
 export default function FormPopup() {
+  const { t } = useTranslation();
   const { navigate, searchParams, setSearchParam } = useRoute();
   const { getSessionById } = useSession();
   const { getNotationsBySessionId } = useNotation();
@@ -24,7 +26,7 @@ export default function FormPopup() {
   if (!session) navigate("/404");
 
   const form = FORM_TYPES.find((f) => f.type === type);
-  const notationsByFormType = notations.filter((d) => d.type === type);
+  const filteredNotations = notations.filter((n) => n.type === type);
 
   function handleGoToSession() {
     navigate(`/session?sessionId=${sessionId}`);
@@ -47,28 +49,26 @@ export default function FormPopup() {
           <button
             onClick={handleGoToSession}
             className="w-fit hover:cursor-pointer hover:underline">
-            Go Back
+            {t("form.goBack")}
           </button>
-          <h2 className="text-xl font-black">Manage {form.label.plural}</h2>
+          <h2 className="text-xl font-black">
+            {t("form.title", { type: t(`${type}.plural`) })}
+          </h2>
         </header>
         <div className="flex items-center justify-between rounded bg-[var(--color)] text-white">
           <h3 className="px-4 py-3 text-base font-medium">
-            {notationsByFormType.length} {form.label.plural}
+            {filteredNotations.length} {t(`${type}.plural`)}
           </h3>
           <IconButton
             type="button"
             onClick={handleGoToSession}
-            title="Exit Form"
+            title={t("form.exitForm")}
             className="px-4 py-3 text-white">
             <ArrowLeft className="size-6" />
           </IconButton>
         </div>
-        <CreateNotationForm
-          form={form}
-          notations={notationsByFormType}
-          openModal={handleOpenModal}
-        />
-        <DeleteNotationForm form={form} notations={notationsByFormType} />
+        <CreateNotationForm openModal={handleOpenModal} />
+        <DeleteNotationForm notations={filteredNotations} form={form} />
       </section>
       {modal === "screenshot" && (
         <AttachScreenshotModal form={form} closeModal={handleCloseModal} />

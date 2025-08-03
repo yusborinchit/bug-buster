@@ -55,7 +55,7 @@ export function Textarea({
           defaultValue={defaultValue}
           placeholder={placeholder}
           rows={rows}
-          className="resize-y px-4 py-3 placeholder:text-zinc-500 focus-visible:outline-none"></textarea>
+          className="resize-none px-4 py-3 placeholder:text-zinc-500 focus-visible:outline-none"></textarea>
         {children && (
           <div
             onClick={handleFocusTextArea}

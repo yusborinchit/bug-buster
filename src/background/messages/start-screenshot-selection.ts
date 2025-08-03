@@ -4,9 +4,14 @@ export default async function (
   req: PlasmoMessaging.Request,
   res: PlasmoMessaging.Response
 ) {
-  const { sessionId } = req.body;
+  const { sessionId, type } = req.body;
 
-  if (!sessionId || typeof sessionId !== "string")
+  if (
+    !sessionId ||
+    typeof sessionId !== "string" ||
+    !type ||
+    typeof type !== "string"
+  )
     return res.send({ status: "error" });
 
   const [tab] = await chrome.tabs.query({
@@ -20,7 +25,7 @@ export default async function (
     await sendToContentScript({
       tabId: tab.id,
       name: "start-screenshot-selection",
-      body: { sessionId }
+      body: { sessionId, type }
     });
   } catch (e) {
     return res.send({ status: "error" });

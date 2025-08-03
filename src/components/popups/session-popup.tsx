@@ -31,11 +31,29 @@ export default function SessionPopup() {
     navigate("/home");
   }
 
-  function handleDownloadReport() {
+  function handleDownloadDocx() {
     const doc = createReportDoc(session, notations, screenshots);
     Packer.toBlob(doc).then((buffer) => {
       chrome.downloads.download({ url: URL.createObjectURL(buffer) });
     });
+  }
+
+  // TODO: improve this maybe with excel.js
+  function handleDownloadCsv() {
+    const header = t("csv.headers") + "\n";
+    const content = notations
+      .map((notation) => {
+        return t("csv.row", {
+          ...notation,
+          date: new Date(notation.createdAt)
+        });
+      })
+      .join("\n");
+
+    const blob = new Blob([header + content], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    chrome.downloads.download({ url, filename: `${session.name}.csv` });
   }
 
   return (
@@ -55,15 +73,25 @@ export default function SessionPopup() {
       <section className="flex flex-col">
         <FormList />
       </section>
-      <footer className="flex">
+      <footer className="flex items-center gap-4">
         <IconButton
           type="button"
-          onClick={handleDownloadReport}
+          onClick={handleDownloadDocx}
           title={t("session.downloadDocx")}
           className="hover:underline">
           <span className="flex items-center gap-1">
             <ArrowDownToLine aria-hidden className="size-6" />
             {t("session.downloadDocx")}
+          </span>
+        </IconButton>
+        <IconButton
+          type="button"
+          onClick={handleDownloadCsv}
+          title={t("session.downloadCsv")}
+          className="hover:underline">
+          <span className="flex items-center gap-1">
+            <ArrowDownToLine aria-hidden className="size-6" />
+            {t("session.downloadCsv")}
           </span>
         </IconButton>
       </footer>

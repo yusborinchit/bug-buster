@@ -124,7 +124,8 @@ export default function CreateNotationForm({ openModal }: Readonly<Props>) {
         placeholder={t("form.notationTitlePlaceholder", {
           type: t(`${type}.singular`)
         })}
-        rows={3}>
+        rows={3}
+        className="resize-none">
         <p className="text-xs text-black">
           {screenshotsIds.length} {t("form.screenshotsAttached")}
         </p>

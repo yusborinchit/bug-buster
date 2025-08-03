@@ -23,7 +23,9 @@ export default function AttachScreenshotModal({ closeModal }: Readonly<Props>) {
 
   if (!sessionId || typeof sessionId !== "string") navigate("/404");
 
-  const screenshots = getScreenshotsBySessionId(sessionId).slice(0, 8);
+  const screenshots = getScreenshotsBySessionId(sessionId)
+    .filter((s) => s.type === type)
+    .slice(0, 8);
   const selectedIds = selectedIdsString.split(",").filter((s) => s !== "");
 
   const isSelected = (id: string) => selectedIds.some((s) => s === id);
@@ -37,7 +39,7 @@ export default function AttachScreenshotModal({ closeModal }: Readonly<Props>) {
 
     const { status } = await sendToBackground({
       name: "start-screenshot-selection",
-      body: { sessionId }
+      body: { sessionId, type }
     });
 
     if (status === "error") {

@@ -1,5 +1,6 @@
 export default {
   translation: {
+    date: "{{date, datetime}}",
     bug: {
       singular: "Error",
       plural: "Errores"
@@ -32,7 +33,8 @@ export default {
       goBack: "Volver",
       title: "Sesión: {{name}}",
       enterForm: "Entrar al Formulario",
-      downloadDocx: "Descargar como DOCX"
+      downloadDocx: "Descargar como DOCX",
+      downloadCsv: "Descargar como CSV"
     },
     form: {
       goBack: "Volver",
@@ -94,6 +96,10 @@ export default {
       tableCount: "Cantidad",
       finalThoughts: "Conclusiones",
       finalThoughtsPlaceholder: "Escribe tus conclusiones finales aquí..."
+    },
+    csv: {
+      headers: "Tipo,Título,Prioridad,Severidad,Fecha",
+      row: "{{type}},{{title}},{{priority}},{{severity}},{{date, datetime}}"
     }
   }
 };

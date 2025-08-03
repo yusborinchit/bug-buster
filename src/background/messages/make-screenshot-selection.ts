@@ -9,12 +9,16 @@ export default async function (
   const { body } = req;
   if (!body || typeof body !== "object") return res.send({ status: "error" });
 
-  const { x, y, width, height, sessionId } = body;
+  const { x, y, width, height, sessionId, type } = body;
   if (
     typeof x !== "number" ||
     typeof y !== "number" ||
     typeof width !== "number" ||
-    typeof height !== "number"
+    typeof height !== "number" ||
+    !sessionId ||
+    typeof sessionId !== "string" ||
+    !type ||
+    typeof type !== "string"
   )
     return res.send({ status: "error" });
 
@@ -34,6 +38,7 @@ export default async function (
 
     await db.add("screenshots", {
       id: crypto.randomUUID(),
+      type,
       sessionId,
       url: croppedScreenshot,
       width,

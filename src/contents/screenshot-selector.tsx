@@ -1,11 +1,25 @@
+import css from "data-text:~/global.css";
+
 import { sendToBackground } from "@plasmohq/messaging";
 import { useMessage } from "@plasmohq/messaging/hook";
+import type { PlasmoGetStyle } from "plasmo";
 import { useCallback, useEffect, useState } from "react";
 import { ABSURD_HIGH_Z_INDEX } from "~/const";
+
+export const getStyle: PlasmoGetStyle = () => {
+  const style = document.createElement("style");
+  style.textContent = css;
+  return style;
+};
 
 interface Coords {
   x: number;
   y: number;
+}
+
+interface ScreenshotData {
+  sessionId: string;
+  type: string;
 }
 
 interface Rect {
@@ -19,17 +33,25 @@ export default function ScreenshotSelector() {
   const [isActive, setIsActive] = useState(false);
   const [pendingCapture, setPendingCapture] = useState<Rect | null>(null);
   const [startPoint, setStartPoint] = useState<Coords | null>(null);
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [screenshotData, setScreenshotData] = useState<ScreenshotData | null>(
+    null
+  );
   const [currentRect, setCurrentRect] = useState<Rect | null>(null);
 
-  useMessage<{ sessionId: string }, unknown>(async (req, res) => {
+  useMessage<ScreenshotData, unknown>(async (req, res) => {
     if (req.name === "start-screenshot-selection") {
-      const { sessionId } = req.body;
-      if (!sessionId || typeof sessionId !== "string")
+      const { sessionId, type } = req.body;
+
+      if (
+        !sessionId ||
+        typeof sessionId !== "string" ||
+        !type ||
+        typeof type !== "string"
+      )
         return res.send({ status: "error" });
 
       setIsActive(true);
-      setSessionId(sessionId);
+      setScreenshotData({ sessionId, type });
 
       document.body.style.overflow = "hidden";
       document.documentElement.style.cursor = "crosshair";
@@ -113,10 +135,10 @@ export default function ScreenshotSelector() {
         requestAnimationFrame(async () => {
           await sendToBackground({
             name: "make-screenshot-selection",
-            body: { ...pendingCapture, sessionId }
+            body: { ...pendingCapture, ...screenshotData }
           });
           setPendingCapture(null);
-          setSessionId(null);
+          setScreenshotData(null);
         });
       });
     }
@@ -125,32 +147,19 @@ export default function ScreenshotSelector() {
   return (
     isActive && (
       <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          pointerEvents: "auto",
-          zIndex: ABSURD_HIGH_Z_INDEX,
-          boxSizing: "border-box",
-          border: "3px solid red"
-        }}>
+        style={{ "--z-index": ABSURD_HIGH_Z_INDEX } as React.CSSProperties}
+        className="pointer-events-auto fixed inset-0 z-[var(--z-index)] box-border h-screen w-screen border-[3px] border-red-600">
         {currentRect && (
           <div
-            style={{
-              left: currentRect.x,
-              top: currentRect.y,
-              width: currentRect.width,
-              height: currentRect.height,
-              pointerEvents: "auto",
-              position: "absolute",
-              border: "1px solid #6491de",
-              borderStyle: "dashed",
-              backgroundColor: "#4752ba",
-              opacity: 0.3,
-              zIndex: ABSURD_HIGH_Z_INDEX
-            }}
+            style={
+              {
+                "--x": `${currentRect.x}px`,
+                "--y": `${currentRect.y}px`,
+                "--width": `${currentRect.width}px`,
+                "--height": `${currentRect.height}px`
+              } as React.CSSProperties
+            }
+            className="pointer-events-auto absolute left-[var(--x)] top-[var(--y)] z-[var(--z-index)] h-[var(--height)] w-[var(--width)] border-2 border-dashed border-blue-500 bg-blue-500/30 opacity-30"
           />
         )}
       </div>

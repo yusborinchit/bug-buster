@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
-import { FORM_TYPES } from "~/const";
+import { NOTATION_COLORS } from "~/const";
 import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
 import { useSession } from "~/hooks/use-session";
@@ -28,7 +28,6 @@ export default function FormPopup() {
 
   if (!session) navigate("/404");
 
-  const form = FORM_TYPES.find((f) => f.type === type);
   const filteredNotations = notations.filter((n) => n.type === type);
 
   function handleGoToSession() {
@@ -45,19 +44,19 @@ export default function FormPopup() {
 
   return (
     <PopupContainer>
+      <header className="flex flex-col">
+        <button
+          onClick={handleGoToSession}
+          className="w-fit hover:cursor-pointer hover:underline">
+          {t("form.goBack")}
+        </button>
+        <h2 className="text-xl font-black">
+          {t("form.title", { type: t(`${type}.plural`) })}
+        </h2>
+      </header>
       <section
-        style={{ "--color": form.color } as CSSProperties}
+        style={{ "--color": NOTATION_COLORS[type] } as CSSProperties}
         className="flex flex-col gap-6">
-        <header className="flex flex-col">
-          <button
-            onClick={handleGoToSession}
-            className="w-fit hover:cursor-pointer hover:underline">
-            {t("form.goBack")}
-          </button>
-          <h2 className="text-xl font-black">
-            {t("form.title", { type: t(`${type}.plural`) })}
-          </h2>
-        </header>
         <div className="flex items-center justify-between rounded bg-[var(--color)] text-white">
           <h3 className="px-4 py-3 text-base font-medium">
             {filteredNotations.length} {t(`${type}.plural`)}
@@ -71,11 +70,9 @@ export default function FormPopup() {
           </IconButton>
         </div>
         <CreateNotationForm openModal={handleOpenModal} />
-        <DeleteNotationForm notations={filteredNotations} form={form} />
+        <DeleteNotationForm notations={filteredNotations} />
       </section>
-      {modal && (
-        <AttachScreenshotModal form={form} closeModal={handleCloseModal} />
-      )}
+      {modal && <AttachScreenshotModal closeModal={handleCloseModal} />}
     </PopupContainer>
   );
 }

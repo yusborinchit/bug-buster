@@ -32,7 +32,7 @@ export default {
       goBack: "Go Back",
       title: "Session: {{name}}",
       enterForm: "Enter Form",
-      generateReport: "Generate Report"
+      downloadDocx: "Download as DOCX"
     },
     form: {
       goBack: "Go Back",
@@ -66,6 +66,33 @@ export default {
       screenshotAlt: "Screenshot thumbnail",
       emptyScreenshots: "Upload some screenshots with the top-right button.",
       attachScreenshots: "Attach {{count}} Screenshots"
+    },
+    docx: {
+      title: "{{sessionName}} Report",
+      testers: "Tester/s:",
+      date: "Date: {{date, datetime}}",
+      tableOfContents: "Table of Contents",
+      objective: "Objective",
+      objectivePlaceholder: "Write the objective of this session here...",
+      scope: "Scope",
+      scopePlaceholder: "Write the scope of this session here...",
+      description: "Description:",
+      descriptionPlaceholder: "Your {{type}} description here...",
+      characteristics: "Characteristics:",
+      severity: "Severity: {{severity}}",
+      priority: "Priority: {{priority}}",
+      reproducibility: "Reproducibility:",
+      type: "Type:",
+      category: "Category:",
+      extraInformation: "Extra Information:",
+      environment: "Environment:",
+      stepsToReproduce: "Steps to Reproduce:",
+      screenshots: "Screenshots:",
+      contentSummary: "Content Summary",
+      tableType: "Type",
+      tableCount: "Count",
+      finalThoughts: "Final Thoughts",
+      finalThoughtsPlaceholder: "Write your final thoughts here..."
     }
   }
 };

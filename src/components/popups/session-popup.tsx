@@ -30,7 +30,7 @@ export default function SessionPopup() {
   }
 
   function handleDownloadReport() {
-    const doc = createReportDoc(notations, screenshots);
+    const doc = createReportDoc(session, notations, screenshots);
     Packer.toBlob(doc).then((buffer) => {
       chrome.downloads.download({ url: URL.createObjectURL(buffer) });
     });
@@ -38,28 +38,28 @@ export default function SessionPopup() {
 
   return (
     <PopupContainer>
-      <section className="flex flex-col gap-6">
-        <header className="flex items-end justify-between">
-          <div className="flex flex-col">
-            <button
-              onClick={handleGoToHome}
-              className="w-fit hover:cursor-pointer hover:underline">
-              {t("session.goBack")}
-            </button>
-            <h2 className="text-xl font-black">
-              {t("session.title", { name: session.name })}
-            </h2>
-          </div>
-        </header>
+      <header className="flex items-end justify-between">
+        <div className="flex flex-col">
+          <button
+            onClick={handleGoToHome}
+            className="w-fit hover:cursor-pointer hover:underline">
+            {t("session.goBack")}
+          </button>
+          <h2 className="text-xl font-black">
+            {t("session.title", { name: session.name })}
+          </h2>
+        </div>
+      </header>
+      <section className="flex flex-col">
         <FormList />
       </section>
       <footer className="flex">
         <button
           type="button"
           onClick={handleDownloadReport}
-          title={t("session.generateReport")}
+          title={t("session.downloadDocx")}
           className="hover:underline">
-          {t("session.generateReport")}
+          {t("session.downloadDocx")}
         </button>
       </footer>
     </PopupContainer>

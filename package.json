@@ -37,7 +37,8 @@
     "permissions": [
       "tabs",
       "activeTab",
-      "downloads"
+      "downloads",
+      "scripting"
     ]
   }
 }

@@ -32,7 +32,7 @@ export default {
       goBack: "Volver",
       title: "Sesión: {{name}}",
       enterForm: "Entrar al Formulario",
-      generateReport: "Generar Reporte"
+      downloadDocx: "Descargar como DOCX"
     },
     form: {
       goBack: "Volver",
@@ -67,6 +67,33 @@ export default {
       emptyScreenshots:
         "Subí capturas con el botón de la esquina superior derecha.",
       attachScreenshots: "Adjuntar {{count}} Capturas"
+    },
+    docx: {
+      title: "Informe de {{sessionName}}",
+      testers: "Tester/s:",
+      date: "Fecha: {{date, datetime}}",
+      tableOfContents: "Índice",
+      objective: "Objetivo",
+      objectivePlaceholder: "Escribe el objetivo de esta sesión aquí...",
+      scope: "Alcance",
+      scopePlaceholder: "Escribe el alcance de esta sesión aquí...",
+      description: "Descripción:",
+      descriptionPlaceholder: "Escribe la descripción de tu {{type}} aquí...",
+      characteristics: "Características:",
+      severity: "Severidad: {{severity}}",
+      priority: "Prioridad: {{priority}}",
+      reproducibility: "Reproducibilidad:",
+      type: "Tipo:",
+      category: "Categoría:",
+      extraInformation: "Información Extra:",
+      environment: "Entorno:",
+      stepsToReproduce: "Pasos para Reproducir:",
+      screenshots: "Capturas:",
+      contentSummary: "Resumen del Contenido",
+      tableType: "Tipo",
+      tableCount: "Cantidad",
+      finalThoughts: "Conclusiones",
+      finalThoughtsPlaceholder: "Escribe tus conclusiones finales aquí..."
     }
   }
 };

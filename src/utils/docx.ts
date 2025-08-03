@@ -11,35 +11,48 @@ import {
 } from "docx";
 import type { Notation } from "~/hooks/use-notation";
 import type { Screenshot } from "~/hooks/use-screenshot";
+import type { Session } from "~/hooks/use-session";
+import i18n from "~/i18n";
 import { DEFAULT_DOC_STYLES, DOC_WIDTH } from "../const";
-import { getCapitalizedString } from "./get-capitalized-string";
 import { getDocxImageSize } from "./get-docx-image-size";
 
 export function createReportDoc(
+  session: Session,
   notations: Notation[],
   screenshots: Screenshot[]
 ) {
-  const { bug, question, idea } = notations.reduce(
-    (acc, val) => {
-      acc[val.type].push(val);
-      return acc;
-    },
-    { bug: [], note: [], question: [], idea: [] } as Record<
-      Notation["type"],
-      Notation[]
-    >
-  );
+  const bugs = notations.filter((n) => n.type === "bug");
+  const questions = notations.filter((n) => n.type === "question");
+  const ideas = notations.filter((n) => n.type === "idea");
 
   const doc = new Document({
     styles: DEFAULT_DOC_STYLES,
+    numbering: {
+      config: [
+        {
+          reference: "my-bullet-points",
+          levels: [
+            {
+              level: 0,
+              format: "bullet",
+              text: "•",
+              alignment: "left",
+              style: {
+                paragraph: { indent: { left: 750, hanging: 250 } }
+              }
+            }
+          ]
+        }
+      ]
+    },
     sections: [
-      createCoverPage(),
+      createCoverPage(session.name, session.createdAt),
       createTableOfContentsPage(),
       createObjectiveAndScopePage(),
-      ...createNotationsPage(bug, screenshots, "Issues"),
-      ...createNotationsPage(question, screenshots, "Questions"),
-      ...createNotationsPage(idea, screenshots, "Ideas"),
-      createSummaryPage(bug, question, idea),
+      ...createNotationsPage(bugs, screenshots, "Issues"),
+      ...createNotationsPage(questions, screenshots, "Questions"),
+      ...createNotationsPage(ideas, screenshots, "Ideas"),
+      createSummaryPage(bugs, questions, ideas),
       createConclusionPage()
     ]
   });
@@ -47,7 +60,10 @@ export function createReportDoc(
   return doc;
 }
 
-export function createCoverPage(): ISectionOptions {
+export function createCoverPage(
+  sessionName: string,
+  date: string
+): ISectionOptions {
   return {
     properties: {
       type: "nextPage"
@@ -57,10 +73,10 @@ export function createCoverPage(): ISectionOptions {
         alignment: "center",
         heading: "Heading1",
         spacing: { before: 3000, after: 3000 },
-        children: [new TextRun("Report Title")]
+        children: [new TextRun(i18n.t("docx.title", { sessionName }))]
       }),
-      new Paragraph("Tester/s:"),
-      new Paragraph("Date:")
+      new Paragraph(i18n.t("docx.testers")),
+      new Paragraph(i18n.t("docx.date", { date: new Date(date) }))
     ]
   };
 }
@@ -71,7 +87,7 @@ export function createTableOfContentsPage(): ISectionOptions {
       type: "nextPage"
     },
     children: [
-      new TableOfContents("Table of Contents", {
+      new TableOfContents(i18n.t("docx.tableOfContents"), {
         hyperlink: true,
         headingStyleRange: "1-5"
       })
@@ -87,24 +103,24 @@ export function createObjectiveAndScopePage(): ISectionOptions {
     children: [
       new Paragraph({
         heading: "Heading2",
-        children: [new TextRun("Objective")]
+        children: [new TextRun(i18n.t("docx.objective"))]
       }),
       new Paragraph({
         children: [
           new TextRun({
-            text: "Your report objective here...",
+            text: i18n.t("docx.objectivePlaceholder"),
             break: 1
           })
         ]
       }),
       new Paragraph({
         heading: "Heading2",
-        children: [new TextRun({ text: "Scope", break: 1 })]
+        children: [new TextRun({ text: i18n.t("docx.scope"), break: 1 })]
       }),
       new Paragraph({
         children: [
           new TextRun({
-            text: "Your report scope here...",
+            text: i18n.t("docx.scopePlaceholder"),
             break: 1
           })
         ]
@@ -134,63 +150,94 @@ export function createNotationsPage(
         children: [new TextRun({ text: notation.title, break: title ? 1 : 0 })]
       }),
       new Paragraph({
-        children: [new TextRun({ text: `Report ID: ${notation.id}`, break: 1 })]
+        children: [new TextRun({ text: `ID: ${notation.id}`, break: 1 })]
       }),
       new Paragraph({
         children: [
           new TextRun(
-            `Date: ${new Date(notation.createdAt).toLocaleString("es-UY")}`
+            i18n.t("docx.date", { date: new Date(notation.createdAt) })
           )
         ]
       }),
       new Paragraph({
         children: [
           new TextRun({
-            text: "Description:",
-            break: 1
-          })
-        ]
-      }),
-      new Paragraph({ children: [new TextRun("Your description here...")] }),
-      new Paragraph({
-        children: [
-          new TextRun({
-            text: "Characteristics:",
+            text: i18n.t("docx.description"),
             break: 1
           })
         ]
       }),
       new Paragraph({
         children: [
-          new TextRun({
-            text: `- Severity: ${getCapitalizedString(notation?.severity)}`
-          })
+          new TextRun(
+            i18n.t("docx.descriptionPlaceholder", { type: notation.type })
+          )
         ]
       }),
       new Paragraph({
         children: [
-          new TextRun(`- Priority: ${getCapitalizedString(notation?.priority)}`)
-        ]
-      }),
-      new Paragraph({ children: [new TextRun("- Reproducibility:")] }),
-      new Paragraph({ children: [new TextRun("- Type:")] }),
-      new Paragraph({ children: [new TextRun("- Category:")] }),
-      new Paragraph({
-        children: [
           new TextRun({
-            text: "Extra Information:",
+            text: i18n.t("docx.characteristics"),
             break: 1
           })
         ]
       }),
-      new Paragraph({ children: [new TextRun({ text: "- Environment:" })] }),
       new Paragraph({
-        children: [new TextRun({ text: "- Steps to Reproduce:" })]
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [
+          new TextRun({
+            text: notation.severity
+              ? i18n.t("docx.severity", {
+                  severity: i18n.t(`form.${notation.severity}Severity`)
+                })
+              : ""
+          })
+        ]
+      }),
+      new Paragraph({
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [
+          new TextRun({
+            text: notation.priority
+              ? i18n.t("docx.priority", {
+                  priority: i18n.t(`form.${notation.priority}Priority`)
+                })
+              : ""
+          })
+        ]
+      }),
+      new Paragraph({
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [new TextRun(i18n.t("docx.reproducibility"))]
+      }),
+      new Paragraph({
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [new TextRun(i18n.t("docx.type"))]
+      }),
+      new Paragraph({
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [new TextRun(i18n.t("docx.category"))]
       }),
       new Paragraph({
         children: [
           new TextRun({
-            text: "Screenshots:",
+            text: i18n.t("docx.extraInformation"),
+            break: 1
+          })
+        ]
+      }),
+      new Paragraph({
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [new TextRun({ text: i18n.t("docx.environment") })]
+      }),
+      new Paragraph({
+        numbering: { reference: "my-bullet-points", level: 0 },
+        children: [new TextRun({ text: i18n.t("docx.stepsToReproduce") })]
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: i18n.t("docx.screenshots"),
             break: 1
           })
         ]
@@ -225,11 +272,9 @@ export function createSummaryPage(
     children: [
       new Paragraph({
         heading: "Heading2",
-        children: [new TextRun("Content Summary")]
+        children: [new TextRun(i18n.t("docx.contentSummary"))]
       }),
-      new Paragraph({
-        children: []
-      }),
+      new Paragraph({ children: [] }),
       new Table({
         columnWidths: [DOC_WIDTH / 2, DOC_WIDTH / 2],
         rows: [
@@ -239,7 +284,12 @@ export function createSummaryPage(
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
                 children: [
                   new Paragraph({
-                    children: [new TextRun({ text: "Type", bold: true })]
+                    children: [
+                      new TextRun({
+                        text: i18n.t("docx.tableType"),
+                        bold: true
+                      })
+                    ]
                   })
                 ]
               }),
@@ -247,7 +297,12 @@ export function createSummaryPage(
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
                 children: [
                   new Paragraph({
-                    children: [new TextRun({ text: "Count", bold: true })]
+                    children: [
+                      new TextRun({
+                        text: i18n.t("docx.tableCount"),
+                        bold: true
+                      })
+                    ]
                   })
                 ]
               })
@@ -257,7 +312,7 @@ export function createSummaryPage(
             children: [
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                children: [new Paragraph("Issues")]
+                children: [new Paragraph(i18n.t("bug.plural"))]
               }),
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -269,7 +324,7 @@ export function createSummaryPage(
             children: [
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                children: [new Paragraph("... High Priority")]
+                children: [new Paragraph(`... ${i18n.t("form.highPriority")}`)]
               }),
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -285,7 +340,9 @@ export function createSummaryPage(
             children: [
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                children: [new Paragraph("... Medium Priority")]
+                children: [
+                  new Paragraph(`... ${i18n.t("form.mediumPriority")}`)
+                ]
               }),
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -301,7 +358,7 @@ export function createSummaryPage(
             children: [
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                children: [new Paragraph("... Low Priority")]
+                children: [new Paragraph(`... ${i18n.t("form.lowPriority")}`)]
               }),
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -317,7 +374,7 @@ export function createSummaryPage(
             children: [
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                children: [new Paragraph("Questions")]
+                children: [new Paragraph(i18n.t("question.plural"))]
               }),
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -329,7 +386,7 @@ export function createSummaryPage(
             children: [
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                children: [new Paragraph("Ideas")]
+                children: [new Paragraph(i18n.t("idea.plural"))]
               }),
               new TableCell({
                 margins: { top: 200, bottom: 200, left: 200, right: 200 },
@@ -351,12 +408,12 @@ export function createConclusionPage(): ISectionOptions {
     children: [
       new Paragraph({
         heading: "Heading2",
-        children: [new TextRun("Final Thoughts")]
+        children: [new TextRun(i18n.t("docx.finalThoughts"))]
       }),
       new Paragraph({
         children: [
           new TextRun({
-            text: "Your final thoughts here...",
+            text: i18n.t("docx.finalThoughtsPlaceholder"),
             break: 1
           })
         ]

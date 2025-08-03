@@ -36,38 +36,33 @@ export default function HomePopup() {
 
   return (
     <PopupContainer>
+      <header className="flex flex-col">
+        <p>{t("home.welcome")}</p>
+        <h2 className="text-3xl font-black underline decoration-red-600 decoration-4">
+          {t("home.title")}
+        </h2>
+      </header>
       <section className="flex flex-col gap-6">
-        <header className="flex flex-col">
-          <p>{t("home.welcome")}</p>
-          <h2 className="text-3xl font-black underline decoration-red-600 decoration-4">
-            {t("home.title")}
-          </h2>
-        </header>
         <SessionList />
         <CreateSessionForm />
-        <footer className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleExportData}
-            title={t("home.exportData")}
-            className="hover:underline">
-            {t("home.exportData")}
-          </button>
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            title={t("home.importData")}
-            className="hover:underline">
-            {t("home.importData")}
-          </button>
-          <input
-            ref={inputRef}
-            onChange={handleImportData}
-            type="file"
-            hidden
-          />
-        </footer>
       </section>
+      <footer className="flex gap-2">
+        <button
+          type="button"
+          onClick={handleExportData}
+          title={t("home.exportData")}
+          className="hover:underline">
+          {t("home.exportData")}
+        </button>
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          title={t("home.importData")}
+          className="hover:underline">
+          {t("home.importData")}
+        </button>
+        <input ref={inputRef} onChange={handleImportData} type="file" hidden />
+      </footer>
     </PopupContainer>
   );
 }

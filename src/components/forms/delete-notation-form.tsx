@@ -1,7 +1,6 @@
 import { Trash2 } from "lucide-react";
 import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { FORM_TYPES } from "~/const";
 import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
 import IconButton from "../ui/icon-button";
@@ -9,13 +8,9 @@ import Select from "../ui/select";
 
 interface Props {
   notations: Notation[];
-  form: (typeof FORM_TYPES)[number];
 }
 
-export default function DeleteNotationForm({
-  notations,
-  form
-}: Readonly<Props>) {
+export default function DeleteNotationForm({ notations }: Readonly<Props>) {
   const { t } = useTranslation();
   const { navigate, getSearchParam } = useRoute();
   const { deleteNotation } = useNotation();

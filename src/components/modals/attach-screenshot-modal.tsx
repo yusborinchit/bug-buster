@@ -2,25 +2,23 @@ import { sendToBackground } from "@plasmohq/messaging";
 import { Frown, ImageUp, Pin } from "lucide-react";
 import type { CSSProperties, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-import type { FORM_TYPES } from "~/const";
+import { NOTATION_COLORS } from "~/const";
+import type { Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
 import { useScreenshot } from "~/hooks/use-screenshot";
 import IconButton from "../ui/icon-button";
 
 interface Props {
-  form: (typeof FORM_TYPES)[number];
   closeModal: () => void;
 }
 
-export default function AttachScreenshotModal({
-  form,
-  closeModal
-}: Readonly<Props>) {
+export default function AttachScreenshotModal({ closeModal }: Readonly<Props>) {
   const { t } = useTranslation();
   const { navigate, getSearchParam, setSearchParam } = useRoute();
   const { getScreenshotsBySessionId } = useScreenshot();
 
   const sessionId = getSearchParam("sessionId", "");
+  const type = getSearchParam<Notation["type"]>("type", "bug");
   const selectedIdsString = getSearchParam("screenshotsIds", "");
 
   if (!sessionId || typeof sessionId !== "string") navigate("/404");
@@ -64,7 +62,7 @@ export default function AttachScreenshotModal({
 
   return (
     <div
-      style={{ "--color": form.color } as CSSProperties}
+      style={{ "--color": NOTATION_COLORS[type] } as CSSProperties}
       onClick={handleCloseModal}
       className="absolute inset-0 bg-black/75 backdrop-blur-[4px]">
       <section

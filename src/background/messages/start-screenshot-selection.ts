@@ -1,5 +1,9 @@
 import { sendToContentScript, type PlasmoMessaging } from "@plasmohq/messaging";
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+
+export default async function (
+  req: PlasmoMessaging.Request,
+  res: PlasmoMessaging.Response
+) {
   const { sessionId } = req.body;
 
   if (!sessionId || typeof sessionId !== "string")
@@ -23,6 +27,4 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   }
 
   return res.send({ status: "ok" });
-};
-
-export default handler;
+}

@@ -1,9 +1,12 @@
-import { type PlasmoMessaging } from "@plasmohq/messaging";
+import type { PlasmoMessaging } from "@plasmohq/messaging";
 import { getDatabase } from "~/database";
 import { cropScreenshot } from "~/utils/crop-screenshot";
 import { createNotificationBadge } from "~/utils/notification-badge";
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+export default async function (
+  req: PlasmoMessaging.Request,
+  res: PlasmoMessaging.Response
+) {
   const { body } = req;
   if (!body || typeof body !== "object") return res.send({ status: "error" });
 
@@ -43,6 +46,4 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   });
 
   return res.send({ status: "ok" });
-};
-
-export default handler;
+}

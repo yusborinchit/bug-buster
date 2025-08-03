@@ -1,4 +1,4 @@
-import { FORM_TYPES } from "~/const";
+import { NOTATION_COLORS } from "~/const";
 import { useNotation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
 import FormCard from "../cards/form-card";
@@ -15,13 +15,13 @@ export default function FormList() {
 
   return (
     <ul className="flex flex-col gap-2 text-base text-white">
-      {FORM_TYPES.map((form) => (
+      {Object.keys(NOTATION_COLORS).map((type) => (
         <FormCard
-          key={form.type}
-          url={`/form?sessionId=${sessionId}&type=${form.type}`}
-          type={form.type}
-          count={notations.filter((n) => n.type === form.type).length}
-          color={form.color}
+          key={type}
+          url={`/form?sessionId=${sessionId}&type=${type}`}
+          type={type}
+          count={notations.filter((n) => n.type === type).length}
+          color={NOTATION_COLORS[type]}
         />
       ))}
     </ul>

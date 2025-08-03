@@ -1,7 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging";
 import { getDatabase } from "~/database";
 import { cropScreenshot } from "~/utils/crop-screenshot";
-import { createNotificationBadge } from "~/utils/notification-badge";
 
 export default async function (
   req: PlasmoMessaging.Request,
@@ -41,8 +40,6 @@ export default async function (
       height,
       createdAt: new Date().toISOString()
     });
-
-    createNotificationBadge("!");
   });
 
   return res.send({ status: "ok" });

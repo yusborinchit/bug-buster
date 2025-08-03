@@ -1,4 +1,5 @@
 import { Packer } from "docx";
+import { ArrowDownToLine } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNotation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
@@ -7,6 +8,7 @@ import { useSession } from "~/hooks/use-session";
 import { createReportDoc } from "~/utils/docx";
 import PopupContainer from "../containers/popup-container";
 import FormList from "../lists/form-list";
+import IconButton from "../ui/icon-button";
 
 export default function SessionPopup() {
   const { t } = useTranslation();
@@ -54,13 +56,16 @@ export default function SessionPopup() {
         <FormList />
       </section>
       <footer className="flex">
-        <button
+        <IconButton
           type="button"
           onClick={handleDownloadReport}
           title={t("session.downloadDocx")}
           className="hover:underline">
-          {t("session.downloadDocx")}
-        </button>
+          <span className="flex items-center gap-1">
+            <ArrowDownToLine aria-hidden className="size-6" />
+            {t("session.downloadDocx")}
+          </span>
+        </IconButton>
       </footer>
     </PopupContainer>
   );

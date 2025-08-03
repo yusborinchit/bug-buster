@@ -93,14 +93,14 @@ export default function AttachScreenshotModal({ closeModal }: Readonly<Props>) {
                 onClick={handleSelectScreenshot(s.id)}
                 className="relative aspect-[2/3] rounded bg-cover [background:var(--url)] hover:cursor-pointer">
                 {isSelected(s.id) && (
-                  <div className="absolute left-1 top-1 z-30 grid place-items-center rounded bg-[var(--color)] p-1 text-white">
+                  <div className="absolute right-2 top-2 z-30 grid place-items-center rounded bg-[var(--color)] p-1 text-white">
                     <Pin className="size-3" />
                   </div>
                 )}
                 <img
                   src={s.url}
                   alt={t("modal.screenshotAlt")}
-                  className="absolute inset-0 aspect-[2/3] w-full rounded bg-black/50 object-contain backdrop-blur-[2px]"
+                  className="absolute inset-0 aspect-[2/3] w-full rounded bg-black/50 object-contain backdrop-blur-sm"
                 />
               </picture>
             ))

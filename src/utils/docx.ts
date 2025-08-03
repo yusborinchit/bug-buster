@@ -13,7 +13,12 @@ import type { Notation } from "~/hooks/use-notation";
 import type { Screenshot } from "~/hooks/use-screenshot";
 import type { Session } from "~/hooks/use-session";
 import i18n from "~/i18n";
-import { DEFAULT_DOC_STYLES, DOC_WIDTH } from "../const";
+import {
+  DEFAULT_DOC_LIST_STYLES,
+  DEFAULT_DOC_STYLES,
+  DOC_WIDTH,
+  LIST_STYLE_NAME
+} from "../const";
 import { getDocxImageSize } from "./get-docx-image-size";
 
 export function createReportDoc(
@@ -27,31 +32,14 @@ export function createReportDoc(
 
   const doc = new Document({
     styles: DEFAULT_DOC_STYLES,
-    numbering: {
-      config: [
-        {
-          reference: "my-bullet-points",
-          levels: [
-            {
-              level: 0,
-              format: "bullet",
-              text: "•",
-              alignment: "left",
-              style: {
-                paragraph: { indent: { left: 750, hanging: 250 } }
-              }
-            }
-          ]
-        }
-      ]
-    },
+    numbering: DEFAULT_DOC_LIST_STYLES,
     sections: [
       createCoverPage(session.name, session.createdAt),
       createTableOfContentsPage(),
       createObjectiveAndScopePage(),
-      ...createNotationsPage(bugs, screenshots, "Issues"),
-      ...createNotationsPage(questions, screenshots, "Questions"),
-      ...createNotationsPage(ideas, screenshots, "Ideas"),
+      ...createNotationsPage(bugs, screenshots, i18n.t("bug.plural")),
+      ...createNotationsPage(questions, screenshots, i18n.t("question.plural")),
+      ...createNotationsPage(ideas, screenshots, i18n.t("idea.plural")),
       createSummaryPage(bugs, questions, ideas),
       createConclusionPage()
     ]
@@ -183,7 +171,7 @@ export function createNotationsPage(
         ]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [
           new TextRun({
             text: notation.severity
@@ -195,7 +183,7 @@ export function createNotationsPage(
         ]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [
           new TextRun({
             text: notation.priority
@@ -207,15 +195,15 @@ export function createNotationsPage(
         ]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [new TextRun(i18n.t("docx.reproducibility"))]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [new TextRun(i18n.t("docx.type"))]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [new TextRun(i18n.t("docx.category"))]
       }),
       new Paragraph({
@@ -227,11 +215,11 @@ export function createNotationsPage(
         ]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [new TextRun({ text: i18n.t("docx.environment") })]
       }),
       new Paragraph({
-        numbering: { reference: "my-bullet-points", level: 0 },
+        numbering: { reference: LIST_STYLE_NAME, level: 0 },
         children: [new TextRun({ text: i18n.t("docx.stepsToReproduce") })]
       }),
       new Paragraph({

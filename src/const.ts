@@ -1,4 +1,4 @@
-import type { IStylesOptions } from "docx";
+import type { INumberingOptions, IStylesOptions } from "docx";
 
 export const NOTATION_COLORS = {
   bug: "#fb2c36",
@@ -69,6 +69,27 @@ export const DEFAULT_DOC_STYLES: IStylesOptions = {
         color: "#000000",
         font: "Arial"
       }
+    }
+  ]
+};
+
+export const LIST_STYLE_NAME = "my-bullet-points";
+
+export const DEFAULT_DOC_LIST_STYLES: INumberingOptions = {
+  config: [
+    {
+      reference: LIST_STYLE_NAME,
+      levels: [
+        {
+          level: 0,
+          format: "bullet",
+          text: "•",
+          alignment: "left",
+          style: {
+            paragraph: { indent: { left: 750, hanging: 250 } }
+          }
+        }
+      ]
     }
   ]
 };

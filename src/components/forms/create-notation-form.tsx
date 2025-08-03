@@ -1,9 +1,14 @@
 import { ImagePlus, Send } from "lucide-react";
-import { type ChangeEvent, type FormEvent, type MouseEvent } from "react";
+import {
+  useRef,
+  type ChangeEvent,
+  type FormEvent,
+  type KeyboardEvent,
+  type MouseEvent
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useNotation, type Notation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
-import { removeNotificationBadge } from "~/utils/notification-badge";
 import IconButton from "../ui/icon-button";
 import Select from "../ui/select";
 import { Textarea } from "../ui/textarea";
@@ -14,6 +19,7 @@ interface Props {
 
 export default function CreateNotationForm({ openModal }: Readonly<Props>) {
   const { t } = useTranslation();
+  const formRef = useRef<HTMLFormElement | null>(null);
   const { navigate, getSearchParam, setSearchParam } = useRoute();
   const { createNotation } = useNotation();
 
@@ -31,7 +37,15 @@ export default function CreateNotationForm({ openModal }: Readonly<Props>) {
   function handleAttachScreenshot(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
     openModal();
-    removeNotificationBadge();
+  }
+
+  function handleTextAreaKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (!formRef.current) return;
+
+    const { key } = event;
+    if (key !== "Enter" || event.shiftKey) return;
+
+    formRef.current.requestSubmit();
   }
 
   function handleTextAreaChange(event: ChangeEvent<HTMLTextAreaElement>) {
@@ -70,7 +84,10 @@ export default function CreateNotationForm({ openModal }: Readonly<Props>) {
   }
 
   return (
-    <form onSubmit={handleCreateNotation} className="flex flex-col gap-2">
+    <form
+      ref={formRef}
+      onSubmit={handleCreateNotation}
+      className="flex flex-col gap-2">
       <label htmlFor="notation-title" className="flex gap-1 font-semibold">
         <span className="text-[var(--color)]">#</span>
         <span>
@@ -101,6 +118,7 @@ export default function CreateNotationForm({ openModal }: Readonly<Props>) {
       <Textarea
         id="notation-title"
         name="notation-title"
+        onKeyDown={handleTextAreaKeyDown}
         onChange={handleTextAreaChange}
         defaultValue={title}
         placeholder={t("form.notationTitlePlaceholder", {

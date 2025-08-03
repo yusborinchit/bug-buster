@@ -8,7 +8,7 @@ export default function SessionList() {
   const { sessions } = useSession();
 
   return sessions.length > 0 ? (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex max-h-[200px] flex-col gap-2 overflow-y-scroll">
       {sessions.map((session) => (
         <SessionCard key={session.id} session={session} />
       ))}

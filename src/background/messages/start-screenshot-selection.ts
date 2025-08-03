@@ -26,5 +26,5 @@ export default async function (
     return res.send({ status: "error" });
   }
 
-  return res.send({ status: "ok" });
+  return res.send({ status: "ok no pasa nada" });
 }

@@ -5,6 +5,7 @@ interface Props {
   label?: string;
   id?: string;
   name: string;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   defaultValue?: string;
   placeholder: string;
@@ -17,6 +18,7 @@ export function Textarea({
   label,
   id,
   name,
+  onKeyDown,
   onChange,
   defaultValue,
   placeholder,
@@ -48,6 +50,7 @@ export function Textarea({
           ref={textAreaRef}
           id={id ?? fallbackId}
           name={name}
+          onKeyDown={onKeyDown}
           onChange={onChange}
           defaultValue={defaultValue}
           placeholder={placeholder}

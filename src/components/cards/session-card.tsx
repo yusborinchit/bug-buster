@@ -40,7 +40,10 @@ export default function SessionCard({ session }: Readonly<Props>) {
 
   return (
     <li className="flex items-center rounded bg-zinc-100">
-      <span className="px-4 py-3 text-base">{session.name}</span>
+      <div className="flex flex-col px-4 py-3">
+        <p className="text-base">{session.name}</p>
+        <p className="text-xs text-zinc-500">{session.site}</p>
+      </div>
       <div className="ml-auto flex gap-2 px-4">
         <IconButton
           type="button"

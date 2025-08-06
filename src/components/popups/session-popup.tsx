@@ -1,5 +1,5 @@
 import { Packer } from "docx";
-import { ArrowDownToLine } from "lucide-react";
+import { ArrowDownToLine, FileText, Sheet } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNotation } from "~/hooks/use-notation";
 import { useRoute } from "~/hooks/use-route";
@@ -79,20 +79,20 @@ export default function SessionPopup() {
           onClick={handleDownloadDocx}
           title={t("session.downloadDocx")}
           className="hover:underline">
-          <span className="flex items-center gap-1">
+          <div className="flex items-center">
             <ArrowDownToLine aria-hidden className="size-6" />
-            {t("session.downloadDocx")}
-          </span>
+            <FileText aria-hidden className="size-6" />
+          </div>
         </IconButton>
         <IconButton
           type="button"
           onClick={handleDownloadCsv}
           title={t("session.downloadCsv")}
           className="hover:underline">
-          <span className="flex items-center gap-1">
+          <div className="flex items-center">
             <ArrowDownToLine aria-hidden className="size-6" />
-            {t("session.downloadCsv")}
-          </span>
+            <Sheet aria-hidden className="size-6" />
+          </div>
         </IconButton>
       </footer>
     </PopupContainer>

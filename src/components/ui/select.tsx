@@ -6,6 +6,7 @@ interface Props {
   id?: string;
   name?: string;
   title?: string;
+  defaultValue?: string;
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   isDisabled?: boolean;
 }
@@ -15,6 +16,7 @@ export default function Select({
   id,
   name,
   title,
+  defaultValue,
   onChange,
   isDisabled = false
 }: Readonly<Props>) {
@@ -29,6 +31,7 @@ export default function Select({
         id={id ?? fallbackId}
         name={name}
         disabled={isDisabled}
+        defaultValue={defaultValue}
         onChange={onChange}
         className="min-w-0 flex-1 appearance-none rounded px-4 py-3 focus-visible:outline-none disabled:cursor-not-allowed">
         {children}

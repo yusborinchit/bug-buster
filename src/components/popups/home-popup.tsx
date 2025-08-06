@@ -52,7 +52,10 @@ export default function HomePopup() {
           </h2>
         </div>
         <div className="w-full max-w-[9ch]">
-          <Select title="Select Language" onChange={handleLanguageChange}>
+          <Select
+            title="Select Language"
+            defaultValue={i18n.language}
+            onChange={handleLanguageChange}>
             <option value="en">EN</option>
             <option value="es">ES</option>
           </Select>

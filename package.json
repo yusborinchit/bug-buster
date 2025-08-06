@@ -1,7 +1,7 @@
 {
   "name": "bug-buster",
   "displayName": "BugBuster",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Exploratory tool to help you test your app and generate custom reports.",
   "author": "Santiago Garcia",
   "scripts": {
